@@ -10,7 +10,17 @@ find_package(ament_cmake_ros REQUIRED)
 
 find_package(Eigen3 REQUIRED)
 
-add_library(collision_restraint src/collision_restraint.cpp)
+find_package(geometry_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+
+add_library(collision_restraint
+  src/collision_restraint.cpp
+  src/footprint.cpp
+  src/node.cpp
+  src/point.cpp
+)
 add_library(collision_restraint::collision_restraint ALIAS collision_restraint)
 target_compile_features(collision_restraint PUBLIC c_std_99 cxx_std_20)
 target_include_directories(collision_restraint PUBLIC
@@ -18,6 +28,12 @@ target_include_directories(collision_restraint PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
 ament_target_dependencies(collision_restraint PUBLIC Eigen3)
+ament_target_dependencies(collision_restraint
+  geometry_msgs
+  rclcpp
+  sensor_msgs
+  std_msgs
+)
 
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -27,6 +43,7 @@ install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
 )
+
 install(
   TARGETS collision_restraint
   EXPORT export_${PROJECT_NAME}
