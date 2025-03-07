@@ -1,5 +1,4 @@
-#ifndef COLLISION_RESTRAINT__COLLISION_RESTRAINT_HPP_
-#define COLLISION_RESTRAINT__COLLISION_RESTRAINT_HPP_
+#pragma once
 
 #include "collision_restraint/visibility_control.h"
 
@@ -10,10 +9,6 @@ class CollisionRestraint
 {
 public:
   CollisionRestraint();
-
-  virtual ~CollisionRestraint();
 };
 
 }  // namespace collision_restraint
-
-#endif  // COLLISION_RESTRAINT__COLLISION_RESTRAINT_HPP_

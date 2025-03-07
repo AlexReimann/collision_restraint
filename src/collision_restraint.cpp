@@ -7,8 +7,4 @@ CollisionRestraint::CollisionRestraint()
 {
 }
 
-CollisionRestraint::~CollisionRestraint()
-{
-}
-
 }  // namespace collision_restraint
