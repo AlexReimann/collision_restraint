@@ -2,8 +2,8 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>collision_restraint</name>
-  <version>0.0.0</version>
-  <description>My descr</description>
+  <version>0.1.0</version>
+  <description>ROS2 module to restrain collisions by scaling velocity to prohibit driving into obstacles</description>
   <maintainer email="reimann.alex88@gmail.com">Alexander Reimann</maintainer>
   <license>MIT</license>
 
