@@ -18,6 +18,7 @@ find_package(std_msgs REQUIRED)
 add_library(collision_restraint
   src/collision_restraint.cpp
   src/footprint.cpp
+  src/model.cpp
   src/node.cpp
   src/point.cpp
 )
