@@ -11,9 +11,11 @@ namespace collision_restraint
 
 PolarPoint::PolarPoint(const float x, const float y) : point_{x, y}
 {
-  if (!std::isfinite(x) || !std::isfinite(y)) {
-    throw std::runtime_error(source_prefix() + std::format("Non-finite point: {}; {}", x, y));
+  if (std::isfinite(x) && std::isfinite(y)) {
+    return;
   }
+
+  throw std::runtime_error(source_prefix() + std::format("Non-finite point: {}; {}", x, y));
 }
 
 float PolarPoint::x() const { return point_.real(); }
