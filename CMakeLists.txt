@@ -20,7 +20,7 @@ add_library(collision_restraint
   src/footprint.cpp
   src/model.cpp
   src/node.cpp
-  src/point.cpp
+  src/polar_point.cpp
 )
 add_library(collision_restraint::collision_restraint ALIAS collision_restraint)
 target_compile_features(collision_restraint PUBLIC c_std_99 cxx_std_20)

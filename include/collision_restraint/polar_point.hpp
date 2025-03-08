@@ -5,10 +5,10 @@
 namespace collision_restraint
 {
 
-class Point
+class PolarPoint
 {
 public:
-  Point(const float x, const float y);
+PolarPoint(const float x, const float y);
 
   [[nodiscard]] float x() const;
   [[nodiscard]] float y() const;

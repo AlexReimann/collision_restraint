@@ -4,7 +4,7 @@
 #include <format>
 #include <stdexcept>
 
-#include "collision_restraint/point.hpp"
+#include "collision_restraint/polar_point.hpp"
 #include "collision_restraint/utility.hpp"
 
 namespace collision_restraint
@@ -20,7 +20,7 @@ void Model::setVelocities(const float linear, const float angular)
 
 float Model::get(const float x, const float y) const
 {
-  Point point{x, y};
+  PolarPoint point{x, y};
 
   return 0.0F;
 };
