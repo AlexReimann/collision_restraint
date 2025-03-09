@@ -26,7 +26,7 @@ void Model::setVelocities(const float linear, const float angular)
     return;
   }
 
-  center_radius_ = velocity_linear_ / velocity_angular_;
+  center_radius_ = std::abs(velocity_linear_ / velocity_angular_);
   inner_radius_ = center_radius_ - footprint_.halfWidth();
 
   const float max_offset =
