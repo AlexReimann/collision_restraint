@@ -81,12 +81,20 @@ float Model::straightDistance(const float x, const float y) const
     return std::numeric_limits<float>::infinity();
   }
 
-  if (velocity_linear_ < 0.0F && x < footprint_.offsetBack()) {
-    return std::abs(x - footprint_.offsetBack());
+  if (velocity_linear_ < 0.0F) {
+    if (x < footprint_.offsetBack()) {
+      return std::abs(x - footprint_.offsetBack());
+    }
+    // inside footprint already checked by insideFootprint()
+    return std::numeric_limits<float>::infinity();
   }
 
-  if (velocity_linear_ > 0.0F && x > footprint_.offsetFront()) {
-    return std::abs(x - footprint_.offsetFront());
+  if (velocity_linear_ > 0.0F) {
+    if (x > footprint_.offsetFront()) {
+      return std::abs(x - footprint_.offsetFront());
+    }
+    // inside footprint already checked by insideFootprint()
+    return std::numeric_limits<float>::infinity();
   }
 
   return 0.0F;
