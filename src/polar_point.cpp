@@ -19,11 +19,9 @@ PolarPoint::PolarPoint(const float x, const float y) : point_{x, y}
 }
 
 float PolarPoint::x() const { return point_.real(); }
-
 float PolarPoint::y() const { return point_.imag(); }
 
 float PolarPoint::r() const { return std::abs(point_); }
-
 float PolarPoint::theta() const { return std::arg(point_); }
 
 }  // namespace collision_restraint
