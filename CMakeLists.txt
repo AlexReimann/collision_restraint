@@ -54,11 +54,18 @@ install(
 )
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  list(APPEND AMENT_LINT_AUTO_EXCLUDE
-    ament_cmake_copyright
+  find_package(ament_cmake_cppcheck REQUIRED)
+  find_package(ament_cmake_cpplint REQUIRED)
+  find_package(ament_cmake_lint_cmake REQUIRED)
+  find_package(ament_cmake_xmllint REQUIRED)
+
+  ament_cppcheck()
+  ament_cpplint(
+    FILTERS "+build,-build/include_order,+readability,+runtime,+whitespace,-whitespace/braces,-whitespace/indent,-legal/copyright"
   )
-  ament_lint_auto_find_test_dependencies()
+  ament_lint_cmake()
+  ament_xmllint()
+
 endif()
 
 ament_export_include_directories(
