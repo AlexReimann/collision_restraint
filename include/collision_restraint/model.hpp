@@ -9,7 +9,7 @@ namespace collision_restraint
 class Model
 {
 public:
-  Model(const Footprint & footprint);
+  explicit Model(const Footprint & footprint);
 
   void setVelocities(const float linear, const float angular);
 
