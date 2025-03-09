@@ -66,6 +66,26 @@ if(BUILD_TESTING)
   ament_lint_cmake()
   ament_xmllint()
 
+
+  find_package(catch_ros2 REQUIRED)
+  include(CTest)
+
+  add_executable(${PROJECT_NAME}_test
+    test/model_test.cpp
+  )
+  message(ERROR_FATAL "what")
+  target_link_libraries(${PROJECT_NAME}_test
+    catch_ros2::catch_ros2_with_main
+    ${PROJECT_NAME}
+  )
+  target_include_directories(${PROJECT_NAME}_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+
+  install(TARGETS ${PROJECT_NAME}_test
+    DESTINATION lib/${PROJECT_NAME}
+  )
 endif()
 
 ament_export_include_directories(
