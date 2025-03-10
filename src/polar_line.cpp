@@ -53,6 +53,10 @@ float PolarLine::theta(const float r) const
 {
   // ros coordinates -> x: forward, y: left
 
+  if (r == 0.0F || m_ == 0.0F) {
+    return std::atan2(a_, b_);
+  }
+
   // r = m / u
   // u = k * cos(theta - alpha)
   // k = sqrt(a*a + b*b)
@@ -67,7 +71,7 @@ float PolarLine::theta(const float r) const
   // theta - alpha = acos(m / (k * r))
   // theta = acos(m / (k * r)) + alpha
 
-  return std::acos(m_ / (k * r)) + alpha;
+  return -std::acos(m_ / (k * r)) + alpha;
 }
 
 }  // namespace collision_restraint

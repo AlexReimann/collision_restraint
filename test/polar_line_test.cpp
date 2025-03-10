@@ -115,3 +115,81 @@ TEST_CASE("radius", "[polar_line]")
     CHECK(diag.r(-1.0F) == std::numeric_limits<float>::infinity());
   }
 }
+
+TEST_CASE("theta", "[polar_line]")
+{
+  // ros coordinates -> x: forward, y: left
+
+  SECTION("x_axis")
+  {
+    PolarLine x_axis{0.0F, 1.0F, 0.0F};
+
+    CHECK(x_axis.theta(0.0F) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(M_PI) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(M_PI_2) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(-M_PI_2) == Catch::Approx(M_PI_2));
+
+    CHECK(x_axis.theta(1.0F) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(-1.0F) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(2.0F) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.theta(-2.0F) == Catch::Approx(M_PI_2));
+  }
+
+  SECTION("y_axis")
+  {
+    PolarLine y_axis{0.0F, 0.0F, 1.0F};
+
+    CHECK(y_axis.theta(0.0F) == 0.0F);
+    CHECK(y_axis.theta(M_PI) == 0.0F);
+    CHECK(y_axis.theta(M_PI_2) == 0.0F);
+    CHECK(y_axis.theta(-M_PI_2) == 0.0F);
+
+    CHECK(y_axis.theta(1.0F) == 0.0F);
+    CHECK(y_axis.theta(-1.0F) == 0.0F);
+    CHECK(y_axis.theta(2.0F) == 0.0F);
+    CHECK(y_axis.theta(-2.0F) == 0.0F);
+  }
+
+  SECTION("horizontal")
+  {
+    PolarLine hor{1.0F, 1.0F, 0.0F};
+
+    CHECK(hor.theta(1.0F) == 0.0F);
+    CHECK(hor.theta(std::sqrt(2.0F)) == Catch::Approx(-M_PI_4));
+
+    CHECK(hor.theta(0.0F) == Catch::Approx(M_PI_2));
+    CHECK(hor.theta(5.0F) == Catch::Approx(-std::acos(1.0F / 5.0F)));
+  }
+
+  SECTION("vertical")
+  {
+    PolarLine ver{1.0F, 0.0F, 1.0F};
+
+    CHECK(ver.theta(1.0F) == Catch::Approx(M_PI_2));
+    CHECK(ver.theta(std::sqrt(2.0F)) == Catch::Approx(M_PI_4));
+
+    CHECK(ver.theta(0.0F) == 0.0F);
+    CHECK(ver.theta(5.0F) == Catch::Approx(std::asin(1.0F / 5.0F)));
+  }
+
+  SECTION("diagonal")
+  {
+    PolarLine diag_pos{1.0F, 1.0F, 1.0F};
+
+    // m: 1
+    // r: 1
+    // k: 1.41421
+    // alpha: 0.785398
+    // m_ / (k * r): 0.707107
+    // acos: 0.785398
+    //
+    // M_PI diff
+
+    CHECK(diag_pos.theta(1.0F) == Catch::Approx(0.0F));
+    // CHECK(diag_pos.theta(2.0F) == Catch::Approx(0.0F));
+    // CHECK(diag_pos.theta(std::sqrt(2.0F)) == Catch::Approx(M_PI_4));
+
+    // CHECK(diag_pos.theta(0.0F) == Catch::Approx(M_PI_2));
+    // CHECK(diag_pos.theta(5.0F) == Catch::Approx(std::acos(1.0F / 5.0F) + M_PI_4));
+  }
+}
