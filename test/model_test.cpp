@@ -9,9 +9,9 @@
 
 using namespace collision_restraint;  // NOLINT
 
-TEST_CASE("constructor", "model") { CHECK_NOTHROW(Model(Footprint(0.0F, 0.0F, 0.0F))); }
+TEST_CASE("constructor", "[model]") { CHECK_NOTHROW(Model(Footprint(0.0F, 0.0F, 0.0F))); }
 
-TEST_CASE("setVelocities", "model")
+TEST_CASE("setVelocities", "[model]")
 {
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
