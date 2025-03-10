@@ -21,6 +21,7 @@ add_library(collision_restraint
   src/footprint.cpp
   src/model.cpp
   src/node.cpp
+  src/polar_line.cpp
   src/polar_point.cpp
 )
 add_library(collision_restraint::collision_restraint ALIAS collision_restraint)
@@ -74,6 +75,7 @@ if(BUILD_TESTING)
 
   add_executable(${PROJECT_NAME}_test
     test/model_test.cpp
+    test/polar_line_test.cpp
   )
 
   target_link_libraries(${PROJECT_NAME}_test
