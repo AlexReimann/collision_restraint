@@ -5,10 +5,10 @@
 namespace collision_restraint
 {
 
-class PolarLine
+class PolarAxisLine
 {
 public:
-  PolarLine(const float m, const float a, const float b);
+  PolarAxisLine(const float m, const float a, const float b);
 
   [[nodiscard]] float m() const;
   [[nodiscard]] float a() const;

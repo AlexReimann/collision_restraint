@@ -1,4 +1,4 @@
-#include "collision_restraint/polar_line.hpp"
+#include "collision_restraint/polar_axis_line.hpp"
 
 #include <angles/angles.h>
 
@@ -11,7 +11,7 @@
 namespace collision_restraint
 {
 
-PolarLine::PolarLine(const float m, const float a, const float b) : m_{m}, a_{a}, b_{b}
+PolarAxisLine::PolarAxisLine(const float m, const float a, const float b) : m_{m}, a_{a}, b_{b}
 {
   if (std::isfinite(m) && std::isfinite(a) && std::isfinite(b) && (a != 0.0F || b != 0.0F)) {
     return;
@@ -21,11 +21,11 @@ PolarLine::PolarLine(const float m, const float a, const float b) : m_{m}, a_{a}
     source_prefix() + std::format("Ill-constructed line: {}; {}, {}", m, a, b));
 }
 
-float PolarLine::m() const { return m_; }
-float PolarLine::a() const { return a_; }
-float PolarLine::b() const { return b_; }
+float PolarAxisLine::m() const { return m_; }
+float PolarAxisLine::a() const { return a_; }
+float PolarAxisLine::b() const { return b_; }
 
-float PolarLine::r(const float theta) const
+float PolarAxisLine::r(const float theta) const
 {
   // ros coordinates -> x: forward, y: left
 
@@ -49,7 +49,7 @@ float PolarLine::r(const float theta) const
   return r > 0.0F ? r : std::numeric_limits<float>::infinity();
 }
 
-float PolarLine::theta(const float r) const
+float PolarAxisLine::theta(const float r) const
 {
   // ros coordinates -> x: forward, y: left
 

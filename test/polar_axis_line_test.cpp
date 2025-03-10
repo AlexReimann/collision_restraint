@@ -1,29 +1,28 @@
 
-#include "collision_restraint/polar_line.hpp"
-
 #include <catch_ros2/catch_ros2.hpp>
 #include <cmath>
 #include <limits>
 
 #include "collision_restraint/footprint.hpp"
+#include "collision_restraint/polar_axis_line.hpp"
 
 using namespace collision_restraint;  // NOLINT
 
-TEST_CASE("constructor", "[polar_line]")
+TEST_CASE("constructor", "[polar_axis_line]")
 {
-  CHECK_NOTHROW(PolarLine(0.0F, 1.0F, 0.0F));
-  CHECK_THROWS(PolarLine(std::numeric_limits<float>::infinity(), 1.0F, 0.0F));
-  CHECK_THROWS(PolarLine(0.0F, std::numeric_limits<float>::infinity(), 1.0F));
-  CHECK_THROWS(PolarLine(0.0F, 1.0F, std::numeric_limits<float>::infinity()));
+  CHECK_NOTHROW(PolarAxisLine(0.0F, 1.0F, 0.0F));
+  CHECK_THROWS(PolarAxisLine(std::numeric_limits<float>::infinity(), 1.0F, 0.0F));
+  CHECK_THROWS(PolarAxisLine(0.0F, std::numeric_limits<float>::infinity(), 1.0F));
+  CHECK_THROWS(PolarAxisLine(0.0F, 1.0F, std::numeric_limits<float>::infinity()));
 }
 
-TEST_CASE("radius", "[polar_line]")
+TEST_CASE("radius", "[polar_axis_line]")
 {
   // ros coordinates -> x: forward, y: left
 
   SECTION("x_axis")
   {
-    PolarLine x_axis{0.0F, 1.0F, 0.0F};
+    PolarAxisLine x_axis{0.0F, 1.0F, 0.0F};
 
     CHECK(x_axis.r(0.0F) == 0.0F);
     CHECK(x_axis.r(M_PI) == 0.0F);
@@ -36,7 +35,7 @@ TEST_CASE("radius", "[polar_line]")
 
   SECTION("y_axis")
   {
-    PolarLine y_axis{0.0F, 0.0F, 1.0F};
+    PolarAxisLine y_axis{0.0F, 0.0F, 1.0F};
 
     CHECK(y_axis.r(M_PI_2) == 0.0F);
     CHECK(y_axis.r(-M_PI_2) == 0.0F);
@@ -49,7 +48,7 @@ TEST_CASE("radius", "[polar_line]")
 
   SECTION("diagonal")
   {
-    PolarLine diag_pos{0.0F, 1.0F, 1.0F};
+    PolarAxisLine diag_pos{0.0F, 1.0F, 1.0F};
 
     CHECK(diag_pos.r(0.0F) == 0.0F);
     CHECK(diag_pos.r(M_PI) == 0.0F);
@@ -59,7 +58,7 @@ TEST_CASE("radius", "[polar_line]")
     CHECK(diag_pos.r(M_PI_4) == std::numeric_limits<float>::infinity());
     CHECK(diag_pos.r(-M_PI + M_PI_4) == std::numeric_limits<float>::infinity());
 
-    PolarLine diag_neg{0.0F, 1.0F, -1.0F};
+    PolarAxisLine diag_neg{0.0F, 1.0F, -1.0F};
 
     CHECK(diag_neg.r(0.0F) == 0.0F);
     CHECK(diag_neg.r(M_PI) == 0.0F);
@@ -72,7 +71,7 @@ TEST_CASE("radius", "[polar_line]")
 
   SECTION("horizontal")
   {
-    PolarLine hor{1.0F, 1.0F, 0.0F};
+    PolarAxisLine hor{1.0F, 1.0F, 0.0F};
 
     CHECK(hor.r(0.0F) == 1.0F);
     CHECK(hor.r(M_PI_4) == std::sqrt(2.0F));
@@ -87,7 +86,7 @@ TEST_CASE("radius", "[polar_line]")
 
   SECTION("vertical")
   {
-    PolarLine ver{1.0F, 0.0F, 1.0F};
+    PolarAxisLine ver{1.0F, 0.0F, 1.0F};
 
     CHECK(ver.r(M_PI_2) == 1.0F);
     CHECK(ver.r(M_PI_4) == std::sqrt(2.0F));
@@ -102,7 +101,7 @@ TEST_CASE("radius", "[polar_line]")
 
   SECTION("arbitrary")
   {
-    PolarLine diag{1.0F, 1.0F, 1.0F};
+    PolarAxisLine diag{1.0F, 1.0F, 1.0F};
 
     CHECK(diag.r(0.0F) == Catch::Approx(1.0F));
     CHECK(diag.r(M_PI_2) == Catch::Approx(1.0F));
@@ -116,13 +115,13 @@ TEST_CASE("radius", "[polar_line]")
   }
 }
 
-TEST_CASE("theta", "[polar_line]")
+TEST_CASE("theta", "[polar_axis_line]")
 {
   // ros coordinates -> x: forward, y: left
 
   SECTION("x_axis")
   {
-    PolarLine x_axis{0.0F, 1.0F, 0.0F};
+    PolarAxisLine x_axis{0.0F, 1.0F, 0.0F};
 
     CHECK(x_axis.theta(0.0F) == Catch::Approx(M_PI_2));
     CHECK(x_axis.theta(M_PI) == Catch::Approx(M_PI_2));
@@ -137,7 +136,7 @@ TEST_CASE("theta", "[polar_line]")
 
   SECTION("y_axis")
   {
-    PolarLine y_axis{0.0F, 0.0F, 1.0F};
+    PolarAxisLine y_axis{0.0F, 0.0F, 1.0F};
 
     CHECK(y_axis.theta(0.0F) == 0.0F);
     CHECK(y_axis.theta(M_PI) == 0.0F);
@@ -152,7 +151,7 @@ TEST_CASE("theta", "[polar_line]")
 
   SECTION("horizontal")
   {
-    PolarLine hor{1.0F, 1.0F, 0.0F};
+    PolarAxisLine hor{1.0F, 1.0F, 0.0F};
 
     CHECK(hor.theta(1.0F) == 0.0F);
     CHECK(hor.theta(std::sqrt(2.0F)) == Catch::Approx(-M_PI_4));
@@ -163,7 +162,7 @@ TEST_CASE("theta", "[polar_line]")
 
   SECTION("vertical")
   {
-    PolarLine ver{1.0F, 0.0F, 1.0F};
+    PolarAxisLine ver{1.0F, 0.0F, 1.0F};
 
     CHECK(ver.theta(1.0F) == Catch::Approx(M_PI_2));
     CHECK(ver.theta(std::sqrt(2.0F)) == Catch::Approx(M_PI_4));
@@ -174,7 +173,7 @@ TEST_CASE("theta", "[polar_line]")
 
   SECTION("diagonal")
   {
-    PolarLine diag_pos{1.0F, 1.0F, 1.0F};
+    PolarAxisLine diag_pos{1.0F, 1.0F, 1.0F};
 
     // m: 1
     // r: 1
