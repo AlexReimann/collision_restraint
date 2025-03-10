@@ -73,7 +73,7 @@ if(BUILD_TESTING)
   add_executable(${PROJECT_NAME}_test
     test/model_test.cpp
   )
-  message(ERROR_FATAL "what")
+
   target_link_libraries(${PROJECT_NAME}_test
     catch_ros2::catch_ros2_with_main
     ${PROJECT_NAME}
