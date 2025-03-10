@@ -10,6 +10,7 @@ find_package(ament_cmake_ros REQUIRED)
 
 find_package(Eigen3 REQUIRED)
 
+find_package(angles REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -30,6 +31,7 @@ target_include_directories(collision_restraint PUBLIC
 
 ament_target_dependencies(collision_restraint PUBLIC Eigen3)
 ament_target_dependencies(collision_restraint
+  angles
   geometry_msgs
   rclcpp
   sensor_msgs
