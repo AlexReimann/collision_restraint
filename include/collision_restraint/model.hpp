@@ -38,6 +38,7 @@ private:
   float inner_radius_;
   float center_radius_;
   float outer_radius_;
+  float corner_radius_;
 };
 
 }  // namespace collision_restraint

@@ -34,6 +34,10 @@ void Model::setVelocities(const float linear, const float angular)
   const float radius_perpendicular = center_radius_ + footprint_.halfWidth();
   outer_radius_ =
     std::sqrt((max_offset * max_offset) + (radius_perpendicular * radius_perpendicular));
+
+  const float corner_offset =
+    velocity_linear_ > 0.0F ? footprint_.offsetFront() : footprint_.offsetBack();
+  corner_radius_ = std::sqrt((inner_radius_ * inner_radius_) + (corner_offset * corner_offset));
 }
 
 bool Model::isStraight() const { return straight_; }
