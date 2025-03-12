@@ -82,7 +82,7 @@ TEST_CASE("setVelocities", "[model]")
   }
 }
 
-TEST_CASE("distance_straight", "model")
+TEST_CASE("distance_straight", "[model]")
 {
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
