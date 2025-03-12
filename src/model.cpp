@@ -1,7 +1,10 @@
 #include "collision_restraint/model.hpp"
 
+#include <angles/angles.h>
+
 #include <cmath>
 
+#include "collision_restraint/polar_axis_line.hpp"
 #include "collision_restraint/polar_point.hpp"
 #include "collision_restraint/utility.hpp"
 
@@ -104,11 +107,35 @@ float Model::straightDistance(const float x, const float y) const
   return 0.0F;
 }
 
-float Model::angularDistance(const PolarPoint & point) const
+float Model::angularDistance(const PolarPoint & point_base_link) const
 {
-  // Use line in polar coordinates function to calculate angular point distance
-  // Check if actually inside circles
-  return point.theta();
+  // handle on-spot rotation
+
+  // transform into rotation center frame
+  const float y_turn_adjusted = left_turn_ ? point_base_link.y() : -point_base_link.y();
+  const PolarPoint point{point_base_link.x(), y_turn_adjusted - center_radius_};
+
+  if (point.r() < inner_radius_ || point.r() > outer_radius_) {
+    return std::numeric_limits<float>::infinity();
+  }
+
+  // rotation center is always along base_link y-axis
+  // footprint is mirrored along x-axis
+  // m = ax + by
+  const PolarAxisLine front{footprint_.offsetFront(), true};
+  const PolarAxisLine side{-(center_radius_ - footprint_.halfWidth()), false};
+
+  // Going forwards, either the front or the side can hit
+
+  if (point.r() > corner_radius_) {
+    // front will hit
+    return angles::normalize_angle_positive(point.theta() - front.min_theta(point.r()));
+  }
+
+  // side will hit
+  return angles::normalize_angle_positive(point.theta() - side.max_theta(point.r()));
+
+  // handle backwards case
 }
 
 }  // namespace collision_restraint
