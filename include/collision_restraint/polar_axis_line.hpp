@@ -14,6 +14,8 @@ public:
   [[nodiscard]] bool horizontal() const;
 
   [[nodiscard]] float r(const float theta) const;
+  [[nodiscard]] float min_theta(const float r) const;
+  [[nodiscard]] float max_theta(const float r) const;
   [[nodiscard]] std::tuple<float, float> thetas(const float r) const;
 
 private:

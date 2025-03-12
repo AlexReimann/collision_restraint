@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <format>
-#include <iostream>
 #include <limits>
 #include <stdexcept>
 
@@ -61,6 +60,18 @@ float PolarAxisLine::r(const float theta) const
 
   // check for numeric errors
   return r > 0.0F ? r : std::numeric_limits<float>::infinity();
+}
+
+float PolarAxisLine::min_theta(const float r) const
+{
+  const auto [a, b] = thetas(r);
+  return std::min(a, b);
+}
+
+float PolarAxisLine::max_theta(const float r) const
+{
+  const auto [a, b] = thetas(r);
+  return std::max(a, b);
 }
 
 std::tuple<float, float> PolarAxisLine::thetas(const float r) const
