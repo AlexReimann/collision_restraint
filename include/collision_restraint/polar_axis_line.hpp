@@ -1,6 +1,6 @@
 #pragma once
 
-#include <complex>
+#include <tuple>
 
 namespace collision_restraint
 {
@@ -8,19 +8,18 @@ namespace collision_restraint
 class PolarAxisLine
 {
 public:
-  PolarAxisLine(const float m, const float a, const float b);
+  PolarAxisLine(const float m, const bool horizontal);
 
   [[nodiscard]] float m() const;
-  [[nodiscard]] float a() const;
-  [[nodiscard]] float b() const;
+  [[nodiscard]] bool horizontal() const;
 
   [[nodiscard]] float r(const float theta) const;
-  [[nodiscard]] float theta(const float r) const;
+  [[nodiscard]] std::tuple<float, float> thetas(const float r) const;
 
 private:
   float m_;
-  float a_;
-  float b_;
+  bool horizontal_;
+  float line_angle_;
 };
 
 }  // namespace collision_restraint
