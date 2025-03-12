@@ -4,6 +4,8 @@
 #include <format>
 #include <stdexcept>
 
+#include <angles/angles.h>
+
 #include "collision_restraint/utility.hpp"
 
 namespace collision_restraint
@@ -22,6 +24,6 @@ float PolarPoint::x() const { return point_.real(); }
 float PolarPoint::y() const { return point_.imag(); }
 
 float PolarPoint::r() const { return std::abs(point_); }
-float PolarPoint::theta() const { return std::arg(point_); }
+float PolarPoint::theta() const { return angles::normalize_angle_positive(std::arg(point_)); }
 
 }  // namespace collision_restraint
