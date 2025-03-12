@@ -20,7 +20,7 @@ public:
   [[nodiscard]] float centerRadius() const;
   [[nodiscard]] float outerRadius() const;
 
-  [[nodiscard]] float distance(const float x, const float y) const;
+  [[nodiscard]] float arcDistance(const float x, const float y) const;
 
 private:
   [[nodiscard]] bool insideFootprint(const float x, const float y) const;

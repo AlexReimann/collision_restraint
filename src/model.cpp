@@ -43,7 +43,7 @@ float Model::innerRadius() const { return inner_radius_; }
 float Model::centerRadius() const { return center_radius_; }
 float Model::outerRadius() const { return outer_radius_; }
 
-float Model::distance(const float x, const float y) const
+float Model::arcDistance(const float x, const float y) const
 {
   PolarPoint point{x, y};
 
