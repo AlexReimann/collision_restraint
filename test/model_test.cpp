@@ -156,6 +156,7 @@ TEST_CASE("distance_angular", "[model]")
     CHECK(model.arcDistance(0.0F, -(outer_point + eps)) == std::numeric_limits<float>::infinity());
 
     CHECK(
-      model.arcDistance(0.0F, -(half_width + front_offset)) == std::numeric_limits<float>::infinity());
+      model.arcDistance(0.0F, -(half_width + front_offset)) ==
+      std::numeric_limits<float>::infinity());
   }
 }
