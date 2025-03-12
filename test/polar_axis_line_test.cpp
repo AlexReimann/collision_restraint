@@ -146,16 +146,26 @@ TEST_CASE("thetas", "[polar_axis_line]")
   SECTION("horizontal")
   {
     PolarAxisLine hor_pos{1.0F, true};
-
     CHECK(hor_pos.thetas(1.0F) == std::tuple<float, float>(0.0F, 0.0F));
     CHECK(std::get<0>(hor_pos.thetas(std::sqrt(2.0F))) == Catch::Approx(M_PI_4));
     CHECK(std::get<1>(hor_pos.thetas(std::sqrt(2.0F))) == Catch::Approx(-M_PI_4));
 
-
     PolarAxisLine hor_neg{-1.0F, true};
-
     CHECK(hor_neg.thetas(1.0F) == std::tuple<float, float>(M_PI, -M_PI));
     CHECK(std::get<0>(hor_neg.thetas(std::sqrt(2.0F))) == Catch::Approx(M_PI_2 + M_PI_4));
     CHECK(std::get<1>(hor_neg.thetas(std::sqrt(2.0F))) == Catch::Approx(-(M_PI_2 + M_PI_4)));
+  }
+
+  SECTION("vertical")
+  {
+    PolarAxisLine ver_pos{1.0F, false};
+    CHECK(ver_pos.thetas(1.0F) == std::tuple<float, float>(M_PI_2, M_PI_2));
+    CHECK(std::get<0>(ver_pos.thetas(std::sqrt(2.0F))) == Catch::Approx(M_PI_4));
+    CHECK(std::get<1>(ver_pos.thetas(std::sqrt(2.0F))) == Catch::Approx(M_PI_2 + M_PI_4));
+
+    PolarAxisLine ver_neg{-1.0F, false};
+    CHECK(ver_neg.thetas(1.0F) == std::tuple<float, float>(-M_PI_2, -M_PI_2));
+    CHECK(std::get<0>(ver_neg.thetas(std::sqrt(2.0F))) == Catch::Approx(-M_PI_4));
+    CHECK(std::get<1>(ver_neg.thetas(std::sqrt(2.0F))) == Catch::Approx(-(M_PI_2 + M_PI_4)));
   }
 }
