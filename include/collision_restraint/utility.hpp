@@ -11,7 +11,7 @@ namespace collision_restraint
   std::source_location location = std::source_location::current())
 {
   return std::format(
-    "{}:{}:{}:{}", location.file_name(), location.line(), location.column(),
+    "{}:{}:{}:{} ", location.file_name(), location.line(), location.column(),
     location.function_name());
 }
 
