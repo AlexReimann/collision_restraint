@@ -44,10 +44,6 @@ void Model::setVelocities(const float linear, const float angular)
   outer_radius_ =
     std::sqrt((max_offset * max_offset) + (radius_perpendicular * radius_perpendicular));
 
-  const float corner_offset =
-    velocity_linear_ > 0.0F ? footprint_.offsetFront() : footprint_.offsetBack();
-  corner_radius_ = std::sqrt((inner_radius_ * inner_radius_) + (corner_offset * corner_offset));
-
   const float left_offset = center_radius_ - footprint_.halfWidth();
   const float right_offset = center_radius_ + footprint_.halfWidth();
   front_ = PolarAxisLine(footprint_.offsetFront(), left_offset, right_offset, true);

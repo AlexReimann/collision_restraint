@@ -41,7 +41,6 @@ private:
   float inner_radius_;
   float center_radius_;
   float outer_radius_;
-  float corner_radius_;
 
   std::optional<PolarAxisLine> front_;
   std::optional<PolarAxisLine> back_;
