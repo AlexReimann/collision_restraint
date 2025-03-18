@@ -14,7 +14,8 @@ namespace collision_restraint
 Model::Model(const Footprint & footprint) : footprint_{footprint}
 {
   if (footprint_.offsetFront() < 0.0F) {
-    throw std::range_error("Angular distance calculation only supports positive front offset");
+    throw std::range_error(
+      source_prefix() + "Angular distance calculation only supports positive front offset");
   }
 }
 
