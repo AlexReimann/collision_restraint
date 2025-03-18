@@ -1,10 +1,10 @@
 #include "collision_restraint/polar_point.hpp"
 
+#include <angles/angles.h>
+
 #include <cmath>
 #include <format>
 #include <stdexcept>
-
-#include <angles/angles.h>
 
 #include "collision_restraint/utility.hpp"
 
@@ -18,6 +18,13 @@ PolarPoint::PolarPoint(const float x, const float y) : point_{x, y}
   }
 
   throw std::runtime_error(source_prefix() + std::format("Non-finite point: {}; {}", x, y));
+}
+
+PolarPoint PolarPoint::polar(const float r, const float theta)
+{
+  PolarPoint point{0.0F, 0.0F};
+  point.point_ = std::polar(r, theta);
+  return point;
 }
 
 float PolarPoint::x() const { return point_.real(); }
