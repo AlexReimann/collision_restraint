@@ -3,6 +3,7 @@
 #include <angles/angles.h>
 
 #include <cmath>
+#include <complex>
 #include <format>
 #include <limits>
 #include <stdexcept>
@@ -15,18 +16,45 @@ namespace collision_restraint
 constexpr float M_F_PI = static_cast<float>(M_PI);
 constexpr float M_F_PI_2 = static_cast<float>(M_PI_2);
 
-PolarAxisLine::PolarAxisLine(const float m, const bool horizontal)
+PolarAxisLine::PolarAxisLine(const float m, const float a, const float b, const bool horizontal)
 : m_{m}, horizontal_{horizontal}, line_angle_{horizontal ? M_F_PI_2 : 0.0F}
 {
-  if (std::isfinite(m)) {
+  if (std::isfinite(m_) && std::isfinite(a) && std::isfinite(b)) {
+    const float a_abs = std::abs(a);
+    const float b_abs = std::abs(b);
+
+    const float min = a * b >= 0.0F ? std::min(a_abs, b_abs) : 0.0F;
+    const float max = std::max(a_abs, b_abs);
+
+    const auto radius = [horizontal, m](const float d) -> float {
+      return horizontal ? std::abs(std::complex<float>(m, d)) : std::abs(std::complex<float>(d, m));
+    };
+
+    min_r_ = radius(min);
+    max_r_ = radius(max);
     return;
   }
 
-  throw std::runtime_error(source_prefix() + std::format("Non-finite line offset: {}", m));
+  throw std::runtime_error(
+    source_prefix() + std::format("Non-finite line param: {}; {}, {}", m_, a, b));
 }
 
 float PolarAxisLine::m() const { return m_; }
+float PolarAxisLine::min_r() const { return min_r_; }
+float PolarAxisLine::max_r() const { return max_r_; }
 bool PolarAxisLine::horizontal() const { return horizontal_; }
+
+float PolarAxisLine::distance(const float theta, const float r, const bool use_min_theta) const
+{
+  if (r < min_r_ || r > max_r_) {
+    return std::numeric_limits<float>::infinity();
+  }
+
+  if (use_min_theta) {
+    return angles::normalize_angle_positive(theta - min_theta(r));
+  }
+  return angles::normalize_angle_positive(theta - max_theta(r));
+}
 
 float PolarAxisLine::r(const float theta) const
 {

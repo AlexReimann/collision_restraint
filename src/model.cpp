@@ -3,15 +3,20 @@
 #include <angles/angles.h>
 
 #include <cmath>
+#include <stdexcept>
 
-#include "collision_restraint/polar_axis_line.hpp"
 #include "collision_restraint/polar_point.hpp"
 #include "collision_restraint/utility.hpp"
 
 namespace collision_restraint
 {
 
-Model::Model(const Footprint & footprint) : footprint_{footprint} {}
+Model::Model(const Footprint & footprint) : footprint_{footprint}
+{
+  if (footprint_.offsetFront() < 0.0F) {
+    throw std::range_error("Angular distance calculation only supports positive front offset");
+  }
+}
 
 void Model::setVelocities(const float linear, const float angular)
 {
@@ -41,6 +46,18 @@ void Model::setVelocities(const float linear, const float angular)
   const float corner_offset =
     velocity_linear_ > 0.0F ? footprint_.offsetFront() : footprint_.offsetBack();
   corner_radius_ = std::sqrt((inner_radius_ * inner_radius_) + (corner_offset * corner_offset));
+
+  const float left_offset = center_radius_ - footprint_.halfWidth();
+  const float right_offset = center_radius_ + footprint_.halfWidth();
+  front_ = PolarAxisLine(footprint_.offsetFront(), left_offset, right_offset, true);
+  back_ = PolarAxisLine(footprint_.offsetBack(), left_offset, right_offset, true);
+
+  left_ = PolarAxisLine(
+    -(center_radius_ - footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
+    false);
+  right_ = PolarAxisLine(
+    -(center_radius_ + footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
+    false);
 }
 
 bool Model::isStraight() const { return straight_; }
@@ -58,7 +75,7 @@ float Model::arcDistance(const float x, const float y) const
     return 0.0F;
   }
 
-  if (velocity_linear_ == 0.0F) {
+  if (velocity_linear_ == 0.0F && velocity_angular_ == 0.0F) {
     return std::numeric_limits<float>::infinity();
   }
 
@@ -119,23 +136,23 @@ float Model::angularDistance(const PolarPoint & point_base_link) const
     return std::numeric_limits<float>::infinity();
   }
 
-  // rotation center is always along base_link y-axis
-  // footprint is mirrored along x-axis
-  // m = ax + by
-  const PolarAxisLine front{footprint_.offsetFront(), true};
-  const PolarAxisLine side{-(center_radius_ - footprint_.halfWidth()), false};
+  const float front_distance = front_->distance(point.theta(), point.r(), true);
 
-  // Going forwards, either the front or the side can hit
+  // Don't need to check back for inner_radius_ > 0.0F
+  const float back_distance = inner_radius_ == 0.0F
+                                ? back_->distance(point.theta(), point.r(), false)
+                                : std::numeric_limits<float>::infinity();
 
-  if (point.r() > corner_radius_) {
-    // front will hit
-    return angles::normalize_angle_positive(point.theta() - front.min_theta(point.r()));
-  }
+  // theta flips when crossing the x-axis
+  const float left_distance = left_->distance(point.theta(), point.r(), left_->m() >= 0.0F);
 
-  // side will hit
-  return angles::normalize_angle_positive(point.theta() - side.max_theta(point.r()));
+  // The right side will only hit in case of the point being directly next to the robot.
+  // (In any other case the point will be hit first by the front or left side)
+  // In this case the right side is swinging out, meaning only the part farther back can hit.
+  // Thus we check the distance with the lower (== min) theta
+  const float right_distance = right_->distance(point.theta(), point.r(), true);
 
-  // handle backwards case
+  return std::min({front_distance, left_distance, right_distance, back_distance});
 }
 
 }  // namespace collision_restraint

@@ -1,7 +1,10 @@
 #pragma once
 
 #include "collision_restraint/footprint.hpp"
+#include "collision_restraint/polar_axis_line.hpp"
 #include "collision_restraint/polar_point.hpp"
+
+#include <optional>
 
 namespace collision_restraint
 {
@@ -39,6 +42,11 @@ private:
   float center_radius_;
   float outer_radius_;
   float corner_radius_;
+
+  std::optional<PolarAxisLine> front_;
+  std::optional<PolarAxisLine> back_;
+  std::optional<PolarAxisLine> left_;
+  std::optional<PolarAxisLine> right_;
 };
 
 }  // namespace collision_restraint
