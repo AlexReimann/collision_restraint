@@ -1,4 +1,4 @@
-#include "collision_restraint/model.hpp"
+#include "collision_restraint/distance_model.hpp"
 
 #include <angles/angles.h>
 
@@ -11,7 +11,7 @@
 namespace collision_restraint
 {
 
-Model::Model(const Footprint & footprint) : footprint_{footprint}
+DistanceModel::DistanceModel(const Footprint & footprint) : footprint_{footprint}
 {
   if (footprint_.offsetFront() < 0.0F) {
     throw std::range_error(
@@ -19,7 +19,7 @@ Model::Model(const Footprint & footprint) : footprint_{footprint}
   }
 }
 
-void Model::setVelocities(const float linear, const float angular)
+void DistanceModel::setVelocities(const float linear, const float angular)
 {
   velocity_linear_ = linear;
   velocity_angular_ = angular;
@@ -57,14 +57,14 @@ void Model::setVelocities(const float linear, const float angular)
     false);
 }
 
-bool Model::isStraight() const { return straight_; }
-bool Model::isLeftTurn() const { return left_turn_; }
+bool DistanceModel::isStraight() const { return straight_; }
+bool DistanceModel::isLeftTurn() const { return left_turn_; }
 
-float Model::innerRadius() const { return inner_radius_; }
-float Model::centerRadius() const { return center_radius_; }
-float Model::outerRadius() const { return outer_radius_; }
+float DistanceModel::innerRadius() const { return inner_radius_; }
+float DistanceModel::centerRadius() const { return center_radius_; }
+float DistanceModel::outerRadius() const { return outer_radius_; }
 
-float Model::arcDistance(const float x, const float y) const
+float DistanceModel::arcDistance(const float x, const float y) const
 {
   PolarPoint point{x, y};
 
@@ -83,7 +83,7 @@ float Model::arcDistance(const float x, const float y) const
   return angularDistance(point);
 }
 
-bool Model::insideFootprint(const float x, const float y) const
+bool DistanceModel::insideFootprint(const float x, const float y) const
 {
   if (std::abs(y) > footprint_.halfWidth()) {
     return false;
@@ -96,7 +96,7 @@ bool Model::insideFootprint(const float x, const float y) const
   return true;
 }
 
-float Model::straightDistance(const float x, const float y) const
+float DistanceModel::straightDistance(const float x, const float y) const
 {
   if (std::abs(y) > footprint_.halfWidth()) {
     return std::numeric_limits<float>::infinity();
@@ -121,7 +121,7 @@ float Model::straightDistance(const float x, const float y) const
   return 0.0F;
 }
 
-float Model::angularDistance(const PolarPoint & point_base_link) const
+float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
 {
   // handle on-spot rotation
 

@@ -1,18 +1,18 @@
 #pragma once
 
+#include <optional>
+
 #include "collision_restraint/footprint.hpp"
 #include "collision_restraint/polar_axis_line.hpp"
 #include "collision_restraint/polar_point.hpp"
 
-#include <optional>
-
 namespace collision_restraint
 {
 
-class Model
+class DistanceModel
 {
 public:
-  explicit Model(const Footprint & footprint);
+  explicit DistanceModel(const Footprint & footprint);
 
   void setVelocities(const float linear, const float angular);
 

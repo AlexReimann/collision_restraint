@@ -18,8 +18,8 @@ find_package(std_msgs REQUIRED)
 
 add_library(collision_restraint
   src/collision_restraint.cpp
+  src/distance_model.cpp
   src/footprint.cpp
-  src/model.cpp
   src/node.cpp
   src/polar_axis_line.cpp
   src/polar_point.cpp
@@ -74,7 +74,7 @@ if(BUILD_TESTING)
   include(CTest)
 
   add_executable(${PROJECT_NAME}_test
-    test/model_test.cpp
+    test/distance_model_test.cpp
     test/polar_axis_line_test.cpp
   )
 
