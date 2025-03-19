@@ -1,17 +1,13 @@
 #pragma once
 
+#include "collision_restraint/velocities.hpp"
+
 namespace collision_restraint
 {
 
 class MotionModel
 {
 public:
-  struct Velocities
-  {
-    float linear_;
-    float angular_;
-  };
-
   explicit MotionModel(const float abs_max_deceleration, const float execution_delay = 0.0F);
 
   [[nodiscard]] float minStoppingDistance(const float linear_velocity) const;

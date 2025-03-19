@@ -16,8 +16,7 @@ float MotionModel::minStoppingDistance(const float linear_velocity) const
          (0.5F * linear_velocity * linear_velocity) / abs_max_deceleration_;
 }
 
-MotionModel::Velocities MotionModel::scaleToStopDistance(
-  const Velocities velocities, const float distance) const
+Velocities MotionModel::scaleToStopDistance(const Velocities velocities, const float distance) const
 {
   const float controlled_distance = distance - (velocities.linear_ * execution_delay_);
 
