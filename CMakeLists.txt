@@ -20,6 +20,7 @@ add_library(collision_restraint
   src/collision_restraint.cpp
   src/distance_model.cpp
   src/footprint.cpp
+  src/motion_model.cpp
   src/node.cpp
   src/polar_axis_line.cpp
   src/polar_point.cpp
