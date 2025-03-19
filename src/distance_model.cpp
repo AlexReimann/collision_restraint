@@ -123,8 +123,6 @@ float DistanceModel::straightDistance(const float x, const float y) const
 
 float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
 {
-  // handle on-spot rotation
-
   // transform into rotation center frame
   const float y_turn_adjusted = left_turn_ ? point_base_link.y() : -point_base_link.y();
   const PolarPoint point{point_base_link.x(), y_turn_adjusted - center_radius_};
