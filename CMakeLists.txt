@@ -76,6 +76,7 @@ if(BUILD_TESTING)
 
   add_executable(${PROJECT_NAME}_test
     test/distance_model_test.cpp
+    test/motion_model_test.cpp
     test/polar_axis_line_test.cpp
   )
 
