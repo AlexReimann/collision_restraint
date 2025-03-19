@@ -12,7 +12,7 @@ Footprint::Footprint(
   const float length_front, const float length_back, const float width, const float buffer)
 : offset_front_{length_front + buffer},
   offset_back_{-(length_back + buffer)},
-  half_width_{0.5f * width}
+  half_width_{(0.5f * width) + buffer}
 {
   if (std::isfinite(offset_front_) && std::isfinite(offset_back_) && std::isfinite(half_width_)) {
     return;
