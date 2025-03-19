@@ -5,15 +5,15 @@
 namespace collision_restraint
 {
 
-MotionModel::MotionModel(const float abs_max_deceleration, const float execution_delay)
-: abs_max_deceleration_{abs_max_deceleration}, execution_delay_{execution_delay}
+MotionModel::MotionModel(const float deceleration, const float execution_delay)
+: abs_deceleration_{std::abs(deceleration)}, execution_delay_{execution_delay}
 {
 }
 
 float MotionModel::minStoppingDistance(const float linear_velocity) const
 {
   return (linear_velocity * execution_delay_) +
-         (0.5F * linear_velocity * linear_velocity) / abs_max_deceleration_;
+         (0.5F * linear_velocity * linear_velocity) / abs_deceleration_;
 }
 
 Velocities MotionModel::scaleToStopDistance(const Velocities velocities, const float distance) const
@@ -24,7 +24,7 @@ Velocities MotionModel::scaleToStopDistance(const Velocities velocities, const f
     return {0.0F, 0.0F};
   }
 
-  const float target_linear = std::sqrt(2.0F * controlled_distance * abs_max_deceleration_);
+  const float target_linear = std::sqrt(2.0F * controlled_distance * abs_deceleration_);
 
   // we want to keep the curvature constant to keep going along the same trajectory, but slower
   const float curvature = velocities.linear_ / velocities.angular_;
