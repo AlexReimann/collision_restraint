@@ -11,7 +11,7 @@
 namespace collision_restraint
 {
 
-DistanceModel::DistanceModel(const Footprint & footprint) : footprint_{footprint}
+DistanceModel::DistanceModel(Footprint footprint) : footprint_{std::move(footprint)}
 {
   if (footprint_.offsetFront() < 0.0F) {
     throw std::range_error(

@@ -12,7 +12,7 @@ namespace collision_restraint
 class DistanceModel
 {
 public:
-  explicit DistanceModel(const Footprint & footprint);
+  explicit DistanceModel(Footprint footprint);
 
   void setVelocities(const float linear, const float angular);
 
