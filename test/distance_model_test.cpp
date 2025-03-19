@@ -9,9 +9,12 @@
 
 using namespace collision_restraint;  // NOLINT
 
-TEST_CASE("constructor", "[model]") { CHECK_NOTHROW(DistanceModel(Footprint(0.0F, 0.5F, 0.0F))); }
+TEST_CASE("constructor", "[distance_model]")
+{
+  CHECK_NOTHROW(DistanceModel(Footprint(0.0F, 0.5F, 0.0F)));
+}
 
-TEST_CASE("setVelocities", "[model]")
+TEST_CASE("setVelocities", "[distance_model]")
 {
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
@@ -83,7 +86,7 @@ TEST_CASE("setVelocities", "[model]")
   }
 }
 
-TEST_CASE("distance_straight", "[model]")
+TEST_CASE("distance_straight", "[distance_model]")
 {
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
@@ -133,7 +136,7 @@ TEST_CASE("distance_straight", "[model]")
   }
 }
 
-TEST_CASE("distance_angular_forwards", "[model]")
+TEST_CASE("distance_angular_forwards", "[distance_model]")
 {
   constexpr float front_offset = 0.5F;
   constexpr float back_offset = 0.3F;
@@ -282,7 +285,7 @@ TEST_CASE("distance_angular_forwards", "[model]")
   }
 }
 
-TEST_CASE("distance_angular_spot_turn", "[model]")
+TEST_CASE("distance_angular_spot_turn", "[distance_model]")
 {
   constexpr float front_offset = 0.5F;
   constexpr float back_offset = 0.3F;
