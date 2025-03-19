@@ -9,7 +9,7 @@ class PolarPoint
 {
 public:
   PolarPoint(const float x, const float y);
-  static PolarPoint polar(const float r, const float theta);
+  [[nodiscard]] static PolarPoint polar(const float r, const float theta);
 
   [[nodiscard]] float x() const;
   [[nodiscard]] float y() const;
