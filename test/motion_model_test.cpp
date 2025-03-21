@@ -11,12 +11,12 @@ using namespace collision_restraint;  // NOLINT
 
 TEST_CASE("constructor", "[motion_model]") { CHECK_NOTHROW(MotionModel(0.0F, 1.0F)); }
 
-TEST_CASE("minStoppingDistance", "[motion_model]")
+TEST_CASE("stoppingDistance", "[motion_model]")
 {
-  CHECK(MotionModel(1.0F).minStoppingDistance(1.0F) == Catch::Approx(0.5F));
-  CHECK(MotionModel(1.0F, 1.0F).minStoppingDistance(1.0F) == Catch::Approx(1.5F));
+  CHECK(MotionModel(1.0F).stoppingDistance(1.0F) == Catch::Approx(0.5F));
+  CHECK(MotionModel(1.0F, 1.0F).stoppingDistance(1.0F) == Catch::Approx(1.5F));
 
-  CHECK(MotionModel(2.0F, 0.5F).minStoppingDistance(1.0F) == Catch::Approx(0.75F));
+  CHECK(MotionModel(2.0F, 0.5F).stoppingDistance(1.0F) == Catch::Approx(0.75F));
 }
 
 TEST_CASE("scaleToStopDistance", "[motion_model]")

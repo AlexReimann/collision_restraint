@@ -10,7 +10,7 @@ MotionModel::MotionModel(const float deceleration, const float execution_delay)
 {
 }
 
-float MotionModel::minStoppingDistance(const float linear_velocity) const
+float MotionModel::stoppingDistance(const float linear_velocity) const
 {
   return (linear_velocity * execution_delay_) +
          (0.5F * linear_velocity * linear_velocity) / abs_deceleration_;
