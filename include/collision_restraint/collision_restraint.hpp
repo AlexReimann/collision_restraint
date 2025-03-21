@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <tuple>
 
@@ -16,13 +17,13 @@ namespace collision_restraint
 class CollisionRestraint
 {
 public:
-  CollisionRestraint(Footprint footprint, const Params & params);
+  CollisionRestraint(Footprint footprint, const std::shared_ptr<Params> & params);
 
   [[nodiscard]] std::tuple<bool, Velocities, PolarPoint> restrain(
     const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud) const;
 
 private:
-  Params params_;
+  std::shared_ptr<Params> params_;
 
   DistanceModel distance_;
   MotionModel motion_;

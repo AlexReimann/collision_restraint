@@ -6,8 +6,8 @@
 namespace collision_restraint
 {
 
-CollisionRestraint::CollisionRestraint(Footprint footprint, const Params & params)
-: params_{params}, distance_{footprint}, motion_{params.deceleration(), params.executionDelay()}
+CollisionRestraint::CollisionRestraint(Footprint footprint, const std::shared_ptr<Params> & params)
+: params_{params}, distance_{footprint}, motion_{params->deceleration(), params->executionDelay()}
 {
 }
 
@@ -23,7 +23,7 @@ std::tuple<bool, Velocities, PolarPoint> CollisionRestraint::restrain(
   float y = 0.0F;
 
   for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
-    if (*iter_z < params_.minObstacleHeight() || *iter_z > params_.maxObstacleHeight()) {
+    if (*iter_z < params_->minObstacleHeight() || *iter_z > params_->maxObstacleHeight()) {
       continue;
     }
 
