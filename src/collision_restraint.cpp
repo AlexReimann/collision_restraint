@@ -7,7 +7,9 @@ namespace collision_restraint
 {
 
 CollisionRestraint::CollisionRestraint(Footprint footprint, const std::shared_ptr<Params> & params)
-: params_{params}, distance_{footprint}, motion_{params->deceleration(), params->executionDelay()}
+: params_{params},
+  distance_{footprint, params},
+  motion_{params->deceleration(), params->executionDelay()}
 {
 }
 

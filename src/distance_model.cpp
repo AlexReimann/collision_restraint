@@ -11,7 +11,8 @@
 namespace collision_restraint
 {
 
-DistanceModel::DistanceModel(Footprint footprint) : footprint_{std::move(footprint)}
+DistanceModel::DistanceModel(Footprint footprint, const std::shared_ptr<Params> & params)
+: params_{params}, footprint_{std::move(footprint)}
 {
   if (footprint_.offsetFront() < 0.0F) {
     throw std::range_error(
@@ -68,7 +69,7 @@ float DistanceModel::arcDistance(const float x, const float y) const
 {
   PolarPoint point{x, y};
 
-  if (insideFootprint(point.x(), point.y())) {
+  if (!params_->ignoreInsideFootrpint() && insideFootprint(point.x(), point.y())) {
     return 0.0F;
   }
 
