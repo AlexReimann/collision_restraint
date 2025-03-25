@@ -39,7 +39,8 @@ std::tuple<bool, Velocities, PolarPoint> CollisionRestraint::restrain(
   }
 
   const PolarPoint closest_point{x, y};
-  const float min_distance = PolarPoint::arcToEucDistance(min_arc_distance, closest_point.r());
+  const float min_distance =
+    PolarPoint::arcToEucDistance(min_arc_distance, closest_point.r()) - params_->distanceBuffer();
   const float stop_distance = motion_.stoppingDistance(velocities.linear_);
 
   if (min_distance > stop_distance) {
