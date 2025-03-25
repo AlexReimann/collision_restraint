@@ -31,6 +31,12 @@ target_include_directories(collision_restraint PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
+add_executable(${PROJECT_NAME}_node src/node.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
+install(TARGETS
+  ${PROJECT_NAME}_node
+  DESTINATION lib/${PROJECT_NAME})
+
 ament_target_dependencies(collision_restraint PUBLIC Eigen3)
 ament_target_dependencies(collision_restraint
   angles
