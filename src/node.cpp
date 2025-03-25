@@ -22,7 +22,7 @@ namespace collision_restraint
 CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
 {
   params_ = std::make_shared<Params>();
-  parameter_callback_ = this->add_on_set_parameters_callback(
+  parameter_callback_ = this->add_post_set_parameters_callback(
     std::bind(&CollisionRestraintNode::parametersCallback, this, std::placeholders::_1));
 
   this->declare_parameter("deceleration_", 1.0);
@@ -49,12 +49,8 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
     std::bind(&CollisionRestraintNode::twistStampedCallback, this, std::placeholders::_1));
 }
 
-rcl_interfaces::msg::SetParametersResult CollisionRestraintNode::parametersCallback(
-  const std::vector<rclcpp::Parameter> & parameters)
+void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parameter> & parameters)
 {
-  rcl_interfaces::msg::SetParametersResult result;
-  result.successful = true;
-  result.reason = "success";
   for (const auto & parameter : parameters) {
     // TODO(me): Fix ugly prone to failure if-else
     if (parameter.get_name() == "deceleration") {
@@ -73,7 +69,6 @@ rcl_interfaces::msg::SetParametersResult CollisionRestraintNode::parametersCallb
       params_->distance_buffer_ = static_cast<float>(parameter.as_double());
     }
   }
-  return result;
 }
 
 void CollisionRestraintNode::pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg)

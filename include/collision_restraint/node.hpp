@@ -19,8 +19,7 @@ public:
   CollisionRestraintNode();
 
 private:
-  rcl_interfaces::msg::SetParametersResult parametersCallback(
-    const std::vector<rclcpp::Parameter> & parameters);
+  void parametersCallback(const std::vector<rclcpp::Parameter> & parameters);
 
   void pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg);
 
@@ -28,7 +27,7 @@ private:
   void twistStampedCallback(geometry_msgs::msg::TwistStamped::SharedPtr twist_msg);
 
   std::shared_ptr<Params> params_;
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr parameter_callback_;
+  rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_velocity_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;
