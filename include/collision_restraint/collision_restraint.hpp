@@ -17,13 +17,13 @@ namespace collision_restraint
 class CollisionRestraint
 {
 public:
-  CollisionRestraint(Footprint footprint, const std::shared_ptr<Params> & params);
+  CollisionRestraint(Footprint footprint, const std::shared_ptr<const Params> & params);
 
   [[nodiscard]] std::tuple<bool, Velocities, PolarPoint> restrain(
     const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud) const;
 
 private:
-  std::shared_ptr<Params> params_;
+  std::shared_ptr<const Params> params_;
 
   DistanceModel distance_;
   MotionModel motion_;

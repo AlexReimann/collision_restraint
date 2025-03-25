@@ -14,7 +14,7 @@ namespace collision_restraint
 class DistanceModel
 {
 public:
-  explicit DistanceModel(Footprint footprint, const std::shared_ptr<Params> & params);
+  explicit DistanceModel(Footprint footprint, const std::shared_ptr<const Params> & params);
 
   void setVelocities(const float linear, const float angular);
 
@@ -32,7 +32,7 @@ private:
   [[nodiscard]] float straightDistance(const float x, const float y) const;
   [[nodiscard]] float angularDistance(const PolarPoint & point_base_link) const;
 
-  std::shared_ptr<Params> params_;
+  std::shared_ptr<const Params> params_;
   Footprint footprint_;
 
   float velocity_linear_;

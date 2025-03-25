@@ -11,7 +11,7 @@
 namespace collision_restraint
 {
 
-DistanceModel::DistanceModel(Footprint footprint, const std::shared_ptr<Params> & params)
+DistanceModel::DistanceModel(Footprint footprint, const std::shared_ptr<const Params> & params)
 : params_{params}, footprint_{std::move(footprint)}
 {
   if (footprint_.offsetFront() < 0.0F) {
