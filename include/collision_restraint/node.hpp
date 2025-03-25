@@ -2,6 +2,7 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -30,4 +31,3 @@ private:
 };
 
 }  // namespace collision_restraint
-
