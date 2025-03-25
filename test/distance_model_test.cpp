@@ -4,14 +4,18 @@
 #include <catch_ros2/catch_ros2.hpp>
 #include <cmath>
 #include <limits>
+#include <memory>
 
 #include "collision_restraint/footprint.hpp"
+#include "collision_restraint/params.hpp"
 
 using namespace collision_restraint;  // NOLINT
 
+std::shared_ptr<Params> params = std::make_shared<Params>(1.0F, 0.0F, -1.0F, 1.0F, false, 0.0F);
+
 TEST_CASE("constructor", "[distance_model]")
 {
-  CHECK_NOTHROW(DistanceModel(Footprint(0.0F, 0.5F, 0.0F)));
+  CHECK_NOTHROW(DistanceModel(Footprint(0.0F, 0.5F, 0.0F), params));
 }
 
 TEST_CASE("setVelocities", "[distance_model]")
@@ -19,7 +23,8 @@ TEST_CASE("setVelocities", "[distance_model]")
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
   constexpr float half_width = front_offset - 1.0F;
-  collision_restraint::DistanceModel model{Footprint(front_offset, back_offset, 2.0F * half_width)};
+  collision_restraint::DistanceModel model{
+    Footprint(front_offset, back_offset, 2.0F * half_width), params};
 
   SECTION("straight")
   {
@@ -73,7 +78,7 @@ TEST_CASE("setVelocities", "[distance_model]")
   SECTION("back offset > front offset")
   {
     collision_restraint::DistanceModel long_back{
-      Footprint(back_offset, front_offset, 2.0F * half_width)};
+      Footprint(back_offset, front_offset, 2.0F * half_width), params};
     long_back.setVelocities(1.0F, 1.0F);
     CHECK(long_back.innerRadius() == (1.0F - half_width));
     CHECK(long_back.centerRadius() == 1.0F);
@@ -91,7 +96,8 @@ TEST_CASE("distance_straight", "[distance_model]")
   constexpr float front_offset = 1.3F;
   constexpr float back_offset = 0.4F;
   constexpr float half_width = front_offset - 1.0F;
-  collision_restraint::DistanceModel model{Footprint(front_offset, back_offset, 2.0F * half_width)};
+  collision_restraint::DistanceModel model{
+    Footprint(front_offset, back_offset, 2.0F * half_width), params};
 
   model.setVelocities(1.0F, 0.0F);
   REQUIRE(model.isStraight());
@@ -141,7 +147,8 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
   constexpr float front_offset = 0.5F;
   constexpr float back_offset = 0.3F;
   constexpr float half_width = 0.2F;
-  collision_restraint::DistanceModel model{Footprint(front_offset, back_offset, 2.0F * half_width)};
+  collision_restraint::DistanceModel model{
+    Footprint(front_offset, back_offset, 2.0F * half_width), params};
 
   constexpr float turn_radius = 1.0F;
   constexpr float eps = 0.00001;
@@ -290,7 +297,8 @@ TEST_CASE("distance_angular_spot_turn", "[distance_model]")
   constexpr float front_offset = 0.5F;
   constexpr float back_offset = 0.3F;
   constexpr float half_width = 0.2F;
-  collision_restraint::DistanceModel model{Footprint(front_offset, back_offset, 2.0F * half_width)};
+  collision_restraint::DistanceModel model{
+    Footprint(front_offset, back_offset, 2.0F * half_width), params};
 
   constexpr float eps = 0.00001;
 
