@@ -2,32 +2,8 @@
 
 namespace collision_restraint
 {
-class Params
+struct Params
 {
-public:
-  Params(
-    const float deceleration, const float execution_delay, const float min_obstacle_height,
-    const float max_obstacle_height, const bool ignore_inside_footprint,
-    const float distance_buffer)
-  : deceleration_{deceleration},
-    execution_delay_{execution_delay},
-    min_obstacle_height_{min_obstacle_height},
-    max_obstacle_height_{max_obstacle_height},
-    ignore_inside_footprint_{ignore_inside_footprint},
-    distance_buffer_{distance_buffer}
-  {
-  }
-
-  [[nodiscard]] float deceleration() const { return deceleration_; }
-  [[nodiscard]] float executionDelay() const { return execution_delay_; }
-
-  [[nodiscard]] float minObstacleHeight() const { return min_obstacle_height_; }
-  [[nodiscard]] float maxObstacleHeight() const { return max_obstacle_height_; }
-
-  [[nodiscard]] bool ignoreInsideFootrpint() const { return ignore_inside_footprint_; }
-  [[nodiscard]] float distanceBuffer() const { return distance_buffer_; }
-
-private:
   float deceleration_;
   float execution_delay_;
 

@@ -69,7 +69,7 @@ float DistanceModel::arcDistance(const float x, const float y) const
 {
   PolarPoint point{x, y};
 
-  if (!params_->ignoreInsideFootrpint() && insideFootprint(point.x(), point.y())) {
+  if (!params_->ignore_inside_footprint_ && insideFootprint(point.x(), point.y())) {
     return 0.0F;
   }
 
