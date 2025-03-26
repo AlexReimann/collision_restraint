@@ -30,14 +30,14 @@ CollisionRestraintNode::CollisionRestraintNode()
   this->declare_parameter("base_link_frame", "base_link");
   base_link_frame_ = this->get_parameter("base_link_frame").as_string();
 
-  this->declare_parameter("deceleration_", 1.0);
-  this->declare_parameter("execution_delay_", 0.0);
+  this->declare_parameter("deceleration", 1.0);
+  this->declare_parameter("execution_delay", 0.0);
 
-  this->declare_parameter("min_obstacle_height_", -1.0);
-  this->declare_parameter("max_obstacle_height_", 1.0);
+  this->declare_parameter("min_obstacle_height", -1.0);
+  this->declare_parameter("max_obstacle_height", 1.0);
 
-  this->declare_parameter("ignore_inside_footprint_", false);
-  this->declare_parameter("distance_buffer_", 0.0);
+  this->declare_parameter("ignore_inside_footprint", false);
+  this->declare_parameter("distance_buffer", 0.0);
 
   this->declare_parameter("footprint_length_front", 1.0);
   this->declare_parameter("footprint_length_back", 0.0);
@@ -82,7 +82,7 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
     } else if (parameter.get_name() == "max_obstacle_height") {
       params_->max_obstacle_height_ = static_cast<float>(parameter.as_double());
 
-    } else if (parameter.get_name() == "ignore_inside_footprint_") {
+    } else if (parameter.get_name() == "ignore_inside_footprint") {
       params_->ignore_inside_footprint_ = parameter.as_bool();
     } else if (parameter.get_name() == "distance_buffer") {
       params_->distance_buffer_ = static_cast<float>(parameter.as_double());
