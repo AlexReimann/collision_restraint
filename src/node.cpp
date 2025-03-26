@@ -118,6 +118,15 @@ void CollisionRestraintNode::twistStampedCallback(
     const auto [restraint, velocities, closest_point] =
       collision_restraint_->restrain({input_linear, input_angular}, latest_point_cloud_);
 
+    const bool full_brake = velocities.linear_ == 0.0F && velocities.angular_ == 0.0F;
+
+    if (full_brake) {
+      RCLCPP_INFO_STREAM_THROTTLE(
+        this->get_logger(), *(this->get_clock()), 3000,
+        std::format(
+          "Full stop because of point at ({}, {})", closest_point.x(), closest_point.y()));
+    }
+
     output.twist.linear.x = velocities.linear_;
     output.twist.angular.z = velocities.angular_;
   }
