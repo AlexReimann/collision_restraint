@@ -12,6 +12,7 @@
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/params.hpp"
+#include "collision_restraint/visualization.hpp"
 
 namespace collision_restraint
 {
@@ -34,6 +35,7 @@ private:
   rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
 
   std::shared_ptr<CollisionRestraint> collision_restraint_;
+  std::shared_ptr<Visualization> visualization_;
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_velocity_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;

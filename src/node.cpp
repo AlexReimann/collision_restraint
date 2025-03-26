@@ -51,6 +51,8 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
 
   collision_restraint_ = std::make_shared<CollisionRestraint>(
     Footprint(footprint_front, footprint_back, footprint_width), params_);
+  visualization_ = std::make_shared<Visualization>(
+    base_link_frame_, Footprint(footprint_front, footprint_back, footprint_width));
 
   pub_velocity_ = this->create_publisher<geometry_msgs::msg::Twist>("output", 1);
   pub_velocity_stamped_ =
@@ -138,6 +140,8 @@ void CollisionRestraintNode::twistStampedCallback(
 
   pub_velocity_stamped_->publish(output);
   pub_velocity_->publish(output.twist);
+
+  pub_trajectory_visual_->publish(visualization_->trajectoryMarker(input_linear, input_angular));
 }
 
 }  // namespace collision_restraint
