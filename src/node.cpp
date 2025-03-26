@@ -20,8 +20,7 @@
 namespace collision_restraint
 {
 
-CollisionRestraintNode::CollisionRestraintNode()
-: Node("collision_restraint"), collision_restraint_{}
+CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
 {
   params_ = std::make_shared<Params>();
   parameter_callback_ = this->add_post_set_parameters_callback(
