@@ -19,7 +19,8 @@
 namespace collision_restraint
 {
 
-CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
+CollisionRestraintNode::CollisionRestraintNode()
+: Node("collision_restraint"), collision_restraint_{}
 {
   params_ = std::make_shared<Params>();
   parameter_callback_ = this->add_post_set_parameters_callback(
@@ -33,6 +34,20 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
 
   this->declare_parameter("ignore_inside_footprint_", false);
   this->declare_parameter("distance_buffer_", 0.0);
+
+  this->declare_parameter("footprint_length_front", 1.0);
+  this->declare_parameter("footprint_length_back", 0.0);
+  this->declare_parameter("footprint_width", 1.0);
+
+  const float footprint_front =
+    static_cast<float>(this->get_parameter("footprint_length_front").as_double());
+  const float footprint_back =
+    static_cast<float>(this->get_parameter("footprint_length_back").as_double());
+  const float footprint_width =
+    static_cast<float>(this->get_parameter("footprint_width").as_double());
+
+  collision_restraint_ = std::make_shared<CollisionRestraint>(
+    Footprint(footprint_front, footprint_back, footprint_width), params_);
 
   pub_velocity_ = this->create_publisher<geometry_msgs::msg::Twist>("output", 1);
   pub_velocity_stamped_ =

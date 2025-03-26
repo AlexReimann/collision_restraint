@@ -8,6 +8,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <vector>
 
+#include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/params.hpp"
 
 namespace collision_restraint
@@ -28,6 +29,8 @@ private:
 
   std::shared_ptr<Params> params_;
   rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
+
+  std::shared_ptr<CollisionRestraint> collision_restraint_;
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_velocity_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;
