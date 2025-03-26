@@ -15,6 +15,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 add_library(collision_restraint
   src/collision_restraint.cpp
@@ -41,6 +42,7 @@ ament_target_dependencies(collision_restraint
   rclcpp
   sensor_msgs
   std_msgs
+  visualization_msgs
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
