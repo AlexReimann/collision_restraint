@@ -25,6 +25,7 @@ add_library(collision_restraint
   src/node.cpp
   src/polar_axis_line.cpp
   src/polar_point.cpp
+  src/visualization.cpp
 )
 add_library(collision_restraint::collision_restraint ALIAS collision_restraint)
 target_compile_features(collision_restraint PUBLIC c_std_99 cxx_std_20)
