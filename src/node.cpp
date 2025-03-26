@@ -57,6 +57,9 @@ CollisionRestraintNode::CollisionRestraintNode()
   pub_velocity_stamped_ =
     this->create_publisher<geometry_msgs::msg::TwistStamped>("output_stamped", 1);
 
+  pub_trajectory_visual_ =
+    this->create_publisher<visualization_msgs::msg::Marker>("visual/trajectory", 1);
+
   sub_point_cloud_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "sub_point_cloud", rclcpp::SystemDefaultsQoS(),
     std::bind(&CollisionRestraintNode::pointCloudCallback, this, std::placeholders::_1));

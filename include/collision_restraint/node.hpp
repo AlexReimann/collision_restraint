@@ -8,6 +8,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <string>
 #include <vector>
+#include <visualization_msgs/msg/marker.hpp>
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/params.hpp"
@@ -36,6 +37,7 @@ private:
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_velocity_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;
+  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_trajectory_visual_;
 
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_point_cloud_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist_;
