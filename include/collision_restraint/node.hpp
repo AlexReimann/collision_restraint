@@ -7,6 +7,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <vector>
+#include <string>
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/params.hpp"
@@ -28,6 +29,7 @@ private:
   void twistStampedCallback(geometry_msgs::msg::TwistStamped::SharedPtr twist_msg);
 
   std::shared_ptr<Params> params_;
+  std::string base_link_frame_;
   rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
 
   std::shared_ptr<CollisionRestraint> collision_restraint_;

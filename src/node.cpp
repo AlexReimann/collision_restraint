@@ -27,6 +27,9 @@ CollisionRestraintNode::CollisionRestraintNode()
   parameter_callback_ = this->add_post_set_parameters_callback(
     std::bind(&CollisionRestraintNode::parametersCallback, this, std::placeholders::_1));
 
+  this->declare_parameter("base_link_frame", "base_link");
+  base_link_frame_ = this->get_parameter("base_link_frame").as_string();
+
   this->declare_parameter("deceleration_", 1.0);
   this->declare_parameter("execution_delay_", 0.0);
 
@@ -89,7 +92,7 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
 
 void CollisionRestraintNode::pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg)
 {
-  if (cloud_msg->header.frame_id != "base_link") {  // TODO(me): make this a param
+  if (cloud_msg->header.frame_id != base_link_frame_) {
     std::domain_error(
       source_prefix() +
       std::format(
