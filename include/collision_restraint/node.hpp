@@ -6,8 +6,8 @@
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/params.hpp"
