@@ -2,6 +2,9 @@
 
 namespace collision_restraint
 {
+
+inline constexpr float g_straight_threshold = 0.001F;
+
 struct Params
 {
   float deceleration_;
