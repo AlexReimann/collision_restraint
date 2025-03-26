@@ -33,9 +33,6 @@ target_include_directories(collision_restraint PUBLIC
 
 add_executable(${PROJECT_NAME}_node src/node.cpp)
 target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
-install(TARGETS
-  ${PROJECT_NAME}_node
-  DESTINATION lib/${PROJECT_NAME})
 
 ament_target_dependencies(collision_restraint PUBLIC Eigen3)
 ament_target_dependencies(collision_restraint
@@ -61,6 +58,11 @@ install(
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+)
+
+install(
+  TARGETS ${PROJECT_NAME}_node
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
