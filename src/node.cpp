@@ -14,6 +14,7 @@
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/footprint.hpp"
 #include "collision_restraint/params.hpp"
+#include "collision_restraint/polar_point.hpp"
 #include "collision_restraint/utility.hpp"
 
 namespace collision_restraint
@@ -102,9 +103,6 @@ void CollisionRestraintNode::twistCallback(geometry_msgs::msg::Twist::SharedPtr 
   geometry_msgs::msg::TwistStamped::SharedPtr stamped =
     std::make_shared<geometry_msgs::msg::TwistStamped>();
   stamped->header.stamp = rclcpp::Clock().now();
-
-  // TODO(me): magic
-
   stamped->twist = *twist_msg;
   twistStampedCallback(stamped);
 }
@@ -112,8 +110,17 @@ void CollisionRestraintNode::twistCallback(geometry_msgs::msg::Twist::SharedPtr 
 void CollisionRestraintNode::twistStampedCallback(
   geometry_msgs::msg::TwistStamped::SharedPtr twist_msg)
 {
-  geometry_msgs::msg::TwistStamped output;
-  output.header = twist_msg->header;
+  geometry_msgs::msg::TwistStamped output(*twist_msg);
+  const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
+  const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
+
+  if (input_linear != 0.0 || input_angular != 0.0) {
+    const auto [restraint, velocities, closest_point] =
+      collision_restraint_->restrain({input_linear, input_angular}, latest_point_cloud_);
+
+    output.twist.linear.x = velocities.linear_;
+    output.twist.angular.z = velocities.angular_;
+  }
 
   pub_velocity_stamped_->publish(output);
   pub_velocity_->publish(output.twist);
