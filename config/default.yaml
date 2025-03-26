@@ -1,4 +1,4 @@
-collision_restraint:
+/**:
   ros__parameters:
     footprint_length_front: 1.0
     footprint_length_back: 0.0
