@@ -26,7 +26,7 @@ Visualization::Visualization(const std::string & frame, Footprint footprint)
 visualization_msgs::msg::Marker Visualization::trajectoryMarker(
   const float linear_velocity, const float angular_velocity) const
 {
-  if (std::abs(linear_velocity) <= g_straight_threshold) {
+  if (std::abs(angular_velocity) <= g_straight_threshold) {
     return straightLineMarker();
   }
 
