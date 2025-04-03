@@ -93,7 +93,6 @@ visualization_msgs::msg::Marker Visualization::straightLineMarker(
 visualization_msgs::msg::Marker Visualization::baseTrajectoryMarker() const
 {
   visualization_msgs::msg::Marker marker;
-  marker.header.stamp = rclcpp::Clock().now();
   marker.header.frame_id = frame_;
 
   marker.ns = "trajectory";
