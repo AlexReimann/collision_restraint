@@ -17,6 +17,8 @@ public:
   [[nodiscard]] visualization_msgs::msg::Marker trajectoryMarker(
     const float linear_velocity, const float angular_velocity, const float stopping_distance) const;
 
+  [[nodiscard]] visualization_msgs::msg::Marker pointMarker(const float x, const float y) const;
+
 private:
   [[nodiscard]] visualization_msgs::msg::Marker straightLineMarker(
     const float stopping_distance) const;

@@ -102,4 +102,36 @@ visualization_msgs::msg::Marker Visualization::baseTrajectoryMarker() const
   return marker;
 }
 
+visualization_msgs::msg::Marker Visualization::pointMarker(const float x, const float y) const
+{
+  visualization_msgs::msg::Marker marker;
+  marker.header.frame_id = frame_;
+
+  marker.ns = "closest_point";
+  marker.id = 0;
+  marker.lifetime = rclcpp::Duration::from_seconds(1.0);
+
+  marker.type = visualization_msgs::msg::Marker::SPHERE;
+  marker.action = visualization_msgs::msg::Marker::ADD;
+
+  const double size = 0.05;
+  marker.scale.x = size;
+  marker.scale.y = size;
+  marker.scale.z = size;
+
+  marker.color.r = 1.0F;
+  marker.color.g = 1.0F;
+  marker.color.b = 1.0F;
+  marker.color.a = 1.0F;
+
+  marker.pose.orientation.x = 0.0;
+  marker.pose.orientation.y = 0.0;
+  marker.pose.orientation.z = 0.0;
+  marker.pose.orientation.w = 1.0;
+  marker.pose.position.x = static_cast<double>(x);
+  marker.pose.position.y = static_cast<double>(y);
+
+  return marker;
+}
+
 }  // namespace collision_restraint

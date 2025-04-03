@@ -22,8 +22,8 @@ std::tuple<bool, Velocities, PolarPoint, float> CollisionRestraint::restrain(
   sensor_msgs::PointCloud2ConstIterator<float> iter_z(point_cloud, "z");
 
   float min_arc_distance = std::numeric_limits<float>::infinity();
-  float x = 0.0F;
-  float y = 0.0F;
+  float x = std::numeric_limits<float>::quiet_NaN();
+  float y = std::numeric_limits<float>::quiet_NaN();
 
   for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
     if (*iter_z < params_->min_obstacle_height_ || *iter_z > params_->max_obstacle_height_) {

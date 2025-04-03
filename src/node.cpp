@@ -155,6 +155,11 @@ void CollisionRestraintNode::twistStampedCallback(
 
     output.twist.linear.x = velocities.linear_;
     output.twist.angular.z = velocities.angular_;
+
+    if (!std::isnan(closest_point.x())) {
+      pub_trajectory_visual_->publish(
+        visualization_->pointMarker(closest_point.x(), closest_point.y()));
+    }
   }
 
   pub_velocity_stamped_->publish(output);
