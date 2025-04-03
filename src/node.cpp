@@ -10,6 +10,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <std_msgs/msg/header.hpp>
 #include <stdexcept>
+#include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/footprint.hpp"
@@ -28,6 +29,9 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
 
   this->declare_parameter("base_link_frame", "base_link");
   base_link_frame_ = this->get_parameter("base_link_frame").as_string();
+
+  tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
   this->declare_parameter("deceleration", 1.0);
   this->declare_parameter("execution_delay", 0.0);
@@ -96,13 +100,19 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
 
 void CollisionRestraintNode::pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg)
 {
-  if (cloud_msg->header.frame_id != base_link_frame_) {
-    std::domain_error(
-      source_prefix() +
-      std::format(
-        "Only point clouds in base_link frame are supported, got: {}", cloud_msg->header.frame_id));
+  if (cloud_msg->header.frame_id == base_link_frame_) {
+    latest_point_cloud_ = *cloud_msg;
+    return;
   }
-  latest_point_cloud_ = *cloud_msg;
+
+  try {
+    latest_point_cloud_ = tf_buffer_->transform(*cloud_msg, base_link_frame_);
+  } catch (const tf2::LookupException & ex) {
+    RCLCPP_INFO_STREAM_THROTTLE(
+      this->get_logger(), *(this->get_clock()), 5000,
+      std::format("Could not transform point cloud to {}: {}", base_link_frame_, ex.what()));
+    return;
+  }
 }
 
 void CollisionRestraintNode::twistCallback(geometry_msgs::msg::Twist::SharedPtr twist_msg)

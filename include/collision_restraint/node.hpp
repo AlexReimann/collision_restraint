@@ -1,5 +1,8 @@
 #pragma once
 
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <memory>
@@ -31,8 +34,11 @@ private:
   void twistStampedCallback(geometry_msgs::msg::TwistStamped::SharedPtr twist_msg);
 
   std::shared_ptr<Params> params_;
-  std::string base_link_frame_;
   rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
+
+  std::string base_link_frame_;
+  std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+  std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
   std::shared_ptr<CollisionRestraint> collision_restraint_;
   std::shared_ptr<Visualization> visualization_;
