@@ -1,0 +1,9 @@
+/**:
+  ros__parameters:
+    footprint_length_front: 0.05
+    footprint_length_back: 0.2
+    footprint_width: 0.3
+
+    distance_buffer: 0.4
+    deceleration: 0.2
+    execution_delay: 0.1
