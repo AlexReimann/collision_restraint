@@ -24,10 +24,10 @@ Visualization::Visualization(const std::string & frame, Footprint footprint)
 }
 
 visualization_msgs::msg::Marker Visualization::trajectoryMarker(
-  const float linear_velocity, const float angular_velocity) const
+  const float linear_velocity, const float angular_velocity, const float stopping_distance) const
 {
   if (std::abs(angular_velocity) <= g_straight_threshold) {
-    return straightLineMarker();
+    return straightLineMarker(stopping_distance);
   }
 
   visualization_msgs::msg::Marker marker = baseTrajectoryMarker();
@@ -52,7 +52,8 @@ visualization_msgs::msg::Marker Visualization::trajectoryMarker(
   return marker;
 }
 
-visualization_msgs::msg::Marker Visualization::straightLineMarker() const
+visualization_msgs::msg::Marker Visualization::straightLineMarker(
+  const float stopping_distance) const
 {
   visualization_msgs::msg::Marker marker = baseTrajectoryMarker();
   marker.type = visualization_msgs::msg::Marker::LINE_LIST;
@@ -80,11 +81,11 @@ visualization_msgs::msg::Marker Visualization::straightLineMarker() const
 
   // left
   marker.points.push_back(make_point(0.0f, footprint_.halfWidth()));
-  marker.points.push_back(make_point(5.0f, footprint_.halfWidth()));
+  marker.points.push_back(make_point(stopping_distance, footprint_.halfWidth()));
 
   // right
   marker.points.push_back(make_point(0.0f, -footprint_.halfWidth()));
-  marker.points.push_back(make_point(5.0f, -footprint_.halfWidth()));
+  marker.points.push_back(make_point(stopping_distance, -footprint_.halfWidth()));
 
   return marker;
 }

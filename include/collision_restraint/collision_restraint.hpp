@@ -19,7 +19,7 @@ class CollisionRestraint
 public:
   CollisionRestraint(Footprint footprint, const std::shared_ptr<const Params> & params);
 
-  [[nodiscard]] std::tuple<bool, Velocities, PolarPoint> restrain(
+  [[nodiscard]] std::tuple<bool, Velocities, PolarPoint, float> restrain(
     const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud) const;
 
 private:

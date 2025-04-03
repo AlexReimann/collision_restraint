@@ -15,10 +15,11 @@ public:
   Visualization(const std::string & frame, Footprint footprint);
 
   [[nodiscard]] visualization_msgs::msg::Marker trajectoryMarker(
-    const float linear_velocity, const float angular_velocity) const;
+    const float linear_velocity, const float angular_velocity, const float stopping_distance) const;
 
 private:
-  [[nodiscard]] visualization_msgs::msg::Marker straightLineMarker() const;
+  [[nodiscard]] visualization_msgs::msg::Marker straightLineMarker(
+    const float stopping_distance) const;
   [[nodiscard]] visualization_msgs::msg::Marker baseTrajectoryMarker() const;
 
   std::string frame_;

@@ -138,9 +138,11 @@ void CollisionRestraintNode::twistStampedCallback(
   const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
 
+  float stop_distance = std::numeric_limits<float>::infinity();
   if (input_linear != 0.0 || input_angular != 0.0) {
-    const auto [restraint, velocities, closest_point] =
+    const auto [restraint, velocities, closest_point, distance] =
       collision_restraint_->restrain({input_linear, input_angular}, latest_point_cloud_);
+    stop_distance = distance;
 
     const bool full_brake = velocities.linear_ == 0.0F && velocities.angular_ == 0.0F;
 
@@ -158,7 +160,8 @@ void CollisionRestraintNode::twistStampedCallback(
   pub_velocity_stamped_->publish(output);
   pub_velocity_->publish(output.twist);
 
-  pub_trajectory_visual_->publish(visualization_->trajectoryMarker(input_linear, input_angular));
+  pub_trajectory_visual_->publish(
+    visualization_->trajectoryMarker(input_linear, input_angular, stop_distance));
 }
 
 }  // namespace collision_restraint
