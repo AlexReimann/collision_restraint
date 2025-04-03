@@ -65,6 +65,7 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
   pub_trajectory_visual_ =
     this->create_publisher<visualization_msgs::msg::MarkerArray>("visual/trajectory", 1);
   pub_point_visual_ = this->create_publisher<visualization_msgs::msg::Marker>("visual/point", 1);
+  pub_distance_ = this->create_publisher<std_msgs::msg::Float32>("distance", 1);
 
   sub_point_cloud_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "sub_point_cloud", rclcpp::SystemDefaultsQoS(),
@@ -169,6 +170,12 @@ void CollisionRestraintNode::twistStampedCallback(
 
   pub_trajectory_visual_->publish(
     visualization_->trajectoryMarker(input_angular, stop_distance, radii));
+
+  if (std::isfinite(stop_distance)) {
+    std_msgs::msg::Float32 distance_msg;
+    distance_msg.data = stop_distance;
+    pub_distance_->publish(distance_msg);
+  }
 }
 
 }  // namespace collision_restraint

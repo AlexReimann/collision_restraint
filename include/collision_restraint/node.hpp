@@ -5,6 +5,7 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
+#include <std_msgs/msg/float32.hpp>
 #include <memory>
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -47,6 +48,7 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr pub_trajectory_visual_;
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_point_visual_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr pub_distance_;
 
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_point_cloud_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist_;
