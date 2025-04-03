@@ -45,8 +45,8 @@ visualization_msgs::msg::Marker Visualization::trajectoryMarker(
   marker.pose.position.z = 0.0;
 
   const double radius = std::abs(linear_velocity / angular_velocity);
-  marker.scale.x = radius;
-  marker.scale.y = radius;
+  marker.scale.x = 2.0 * radius;
+  marker.scale.y = 2.0 * radius;
   marker.pose.position.y = std::copysign(radius, angular_velocity);
 
   return marker;
