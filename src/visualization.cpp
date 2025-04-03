@@ -77,7 +77,7 @@ visualization_msgs::msg::Marker Visualization::straightLineMarker(
   marker.pose.orientation.z = 0.0;
   marker.pose.orientation.w = 1.0;
 
-  marker.scale.x = 0.03;
+  marker.scale.x = 0.06;
   marker.color = k_trajectory_color;
 
   const auto make_point = [](const float x, const float y) -> geometry_msgs::msg::Point {
