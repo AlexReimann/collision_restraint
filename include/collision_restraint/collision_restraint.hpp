@@ -8,6 +8,7 @@
 #include "collision_restraint/footprint.hpp"
 #include "collision_restraint/motion_model.hpp"
 #include "collision_restraint/params.hpp"
+#include "collision_restraint/radii.hpp"
 #include "collision_restraint/velocities.hpp"
 #include "collision_restraint/visibility_control.h"
 
@@ -19,7 +20,7 @@ class CollisionRestraint
 public:
   CollisionRestraint(Footprint footprint, const std::shared_ptr<const Params> & params);
 
-  [[nodiscard]] std::tuple<bool, Velocities, PolarPoint, float> restrain(
+  [[nodiscard]] std::tuple<bool, Velocities, PolarPoint, float, Radii> restrain(
     const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud);
 
 private:

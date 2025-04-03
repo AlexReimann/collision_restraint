@@ -14,7 +14,7 @@ CollisionRestraint::CollisionRestraint(
 {
 }
 
-std::tuple<bool, Velocities, PolarPoint, float> CollisionRestraint::restrain(
+std::tuple<bool, Velocities, PolarPoint, float, Radii> CollisionRestraint::restrain(
   const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud)
 {
   distance_.setVelocities(velocities.linear_, velocities.angular_);
@@ -43,14 +43,18 @@ std::tuple<bool, Velocities, PolarPoint, float> CollisionRestraint::restrain(
 
   const PolarPoint closest_point{x, y};
   const float min_distance =
-    PolarPoint::arcToEucDistance(min_arc_distance, closest_point.r()) - params_->distance_buffer_;
+    (distance_.isStraight() ? min_arc_distance
+                            : PolarPoint::arcToEucDistance(min_arc_distance, closest_point.r())) -
+    params_->distance_buffer_;
   const float stop_distance = motion_.stoppingDistance(velocities.linear_);
 
   if (min_distance > stop_distance) {
-    return {false, velocities, closest_point, stop_distance};
+    return {false, velocities, closest_point, stop_distance, distance_.radii()};
   }
 
-  return {true, motion_.scaleToStopDistance(velocities, min_distance), closest_point, min_distance};
+  return {
+    true, motion_.scaleToStopDistance(velocities, min_distance), closest_point, min_distance,
+    distance_.radii()};
 }
 
 }  // namespace collision_restraint

@@ -29,40 +29,37 @@ void DistanceModel::setVelocities(const float linear, const float angular)
   left_turn_ = velocity_angular_ >= 0.0F;
 
   if (straight_) {
-    inner_radius_ = std::numeric_limits<float>::infinity();
-    center_radius_ = std::numeric_limits<float>::infinity();
-    outer_radius_ = std::numeric_limits<float>::infinity();
+    radii_.inner_ = std::numeric_limits<float>::infinity();
+    radii_.center_ = std::numeric_limits<float>::infinity();
+    radii_.outer_ = std::numeric_limits<float>::infinity();
     return;
   }
 
-  center_radius_ = std::abs(velocity_linear_ / velocity_angular_);
-  inner_radius_ = std::max(0.0F, center_radius_ - footprint_.halfWidth());
+  radii_.center_ = std::abs(velocity_linear_ / velocity_angular_);
+  radii_.inner_ = std::max(0.0F, radii_.center_ - footprint_.halfWidth());
 
   const float max_offset =
     std::max(std::abs(footprint_.offsetFront()), std::abs(footprint_.offsetBack()));
-  const float radius_perpendicular = center_radius_ + footprint_.halfWidth();
-  outer_radius_ =
+  const float radius_perpendicular = radii_.center_ + footprint_.halfWidth();
+  radii_.outer_ =
     std::sqrt((max_offset * max_offset) + (radius_perpendicular * radius_perpendicular));
 
-  const float left_offset = center_radius_ - footprint_.halfWidth();
-  const float right_offset = center_radius_ + footprint_.halfWidth();
+  const float left_offset = radii_.center_ - footprint_.halfWidth();
+  const float right_offset = radii_.center_ + footprint_.halfWidth();
   front_ = PolarAxisLine(footprint_.offsetFront(), left_offset, right_offset, true);
   back_ = PolarAxisLine(footprint_.offsetBack(), left_offset, right_offset, true);
 
   left_ = PolarAxisLine(
-    -(center_radius_ - footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
+    -(radii_.center_ - footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
     false);
   right_ = PolarAxisLine(
-    -(center_radius_ + footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
+    -(radii_.center_ + footprint_.halfWidth()), footprint_.offsetFront(), footprint_.offsetBack(),
     false);
 }
 
 bool DistanceModel::isStraight() const { return straight_; }
 bool DistanceModel::isLeftTurn() const { return left_turn_; }
-
-float DistanceModel::innerRadius() const { return inner_radius_; }
-float DistanceModel::centerRadius() const { return center_radius_; }
-float DistanceModel::outerRadius() const { return outer_radius_; }
+Radii DistanceModel::radii() const { return radii_; }
 
 float DistanceModel::arcDistance(const float x, const float y) const
 {
@@ -125,16 +122,16 @@ float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
 {
   // transform into rotation center frame
   const float y_turn_adjusted = left_turn_ ? point_base_link.y() : -point_base_link.y();
-  const PolarPoint point{point_base_link.x(), y_turn_adjusted - center_radius_};
+  const PolarPoint point{point_base_link.x(), y_turn_adjusted - radii_.center_};
 
-  if (point.r() < inner_radius_ || point.r() > outer_radius_) {
+  if (point.r() < radii_.inner_ || point.r() > radii_.outer_) {
     return std::numeric_limits<float>::infinity();
   }
 
   const float front_distance = front_->distance(point.theta(), point.r(), true);
 
-  // Don't need to check back for inner_radius_ > 0.0F
-  const float back_distance = inner_radius_ == 0.0F
+  // Don't need to check back for radii_.inner_ > 0.0F
+  const float back_distance = radii_.inner_ == 0.0F
                                 ? back_->distance(point.theta(), point.r(), false)
                                 : std::numeric_limits<float>::infinity();
 

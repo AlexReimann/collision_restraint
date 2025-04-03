@@ -7,6 +7,7 @@
 #include "collision_restraint/params.hpp"
 #include "collision_restraint/polar_axis_line.hpp"
 #include "collision_restraint/polar_point.hpp"
+#include "collision_restraint/radii.hpp"
 
 namespace collision_restraint
 {
@@ -21,9 +22,7 @@ public:
   [[nodiscard]] bool isStraight() const;
   [[nodiscard]] bool isLeftTurn() const;
 
-  [[nodiscard]] float innerRadius() const;
-  [[nodiscard]] float centerRadius() const;
-  [[nodiscard]] float outerRadius() const;
+  [[nodiscard]] Radii radii() const;
 
   [[nodiscard]] float arcDistance(const float x, const float y) const;
 
@@ -40,10 +39,7 @@ private:
 
   bool straight_;
   bool left_turn_;
-
-  float inner_radius_;
-  float center_radius_;
-  float outer_radius_;
+  Radii radii_;
 
   std::optional<PolarAxisLine> front_;
   std::optional<PolarAxisLine> back_;

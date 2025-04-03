@@ -23,33 +23,43 @@ Visualization::Visualization(const std::string & frame, Footprint footprint)
 {
 }
 
-visualization_msgs::msg::Marker Visualization::trajectoryMarker(
-  const float linear_velocity, const float angular_velocity, const float stopping_distance) const
+visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
+  const float angular_velocity, const float stopping_distance, const Radii & radii) const
 {
+  visualization_msgs::msg::MarkerArray array;
+
   if (std::abs(angular_velocity) <= g_straight_threshold) {
-    return straightLineMarker(stopping_distance);
+    array.markers.push_back(straightLineMarker(stopping_distance));
+    return array;
   }
 
-  visualization_msgs::msg::Marker marker = baseTrajectoryMarker();
-  marker.type = visualization_msgs::msg::Marker::CYLINDER;
-  marker.action = visualization_msgs::msg::Marker::ADD;
+  if (!std::isnormal(radii.outer_)) {
+    return array;
+  }
 
-  marker.scale.z = 0.01;
-  marker.color = k_trajectory_color;
+  const bool left = angular_velocity >= 0.0 ? true : false;
 
-  marker.pose.orientation.x = 0.0;
-  marker.pose.orientation.y = 0.0;
-  marker.pose.orientation.z = 0.0;
-  marker.pose.orientation.w = 1.0;
-  marker.pose.position.x = 0.0;
-  marker.pose.position.z = 0.0;
+  visualization_msgs::msg::Marker outer = circleMarker(radii.outer_, -footprint_.halfWidth(), left);
+  array.markers.push_back(outer);
 
-  const double radius = std::abs(linear_velocity / angular_velocity);
-  marker.scale.x = 2.0 * radius;
-  marker.scale.y = 2.0 * radius;
-  marker.pose.position.y = std::copysign(radius, angular_velocity);
+  if (std::isnormal(radii.center_)) {
+    visualization_msgs::msg::Marker center = circleMarker(radii.center_, 0.0F, left);
+    center.id = 1;
+    center.pose.position.z = 0.01;
+    center.color.b = 0.7;
+    array.markers.push_back(center);
+  }
 
-  return marker;
+  if (std::isnormal(radii.inner_)) {
+    visualization_msgs::msg::Marker inner =
+      circleMarker(radii.inner_, footprint_.halfWidth(), left);
+    inner.id = 2;
+    inner.pose.position.z = 0.02;
+    inner.color.b = 0.3;
+    array.markers.push_back(inner);
+  }
+
+  return array;
 }
 
 visualization_msgs::msg::Marker Visualization::straightLineMarker(
@@ -86,6 +96,30 @@ visualization_msgs::msg::Marker Visualization::straightLineMarker(
   // right
   marker.points.push_back(make_point(0.0f, -footprint_.halfWidth()));
   marker.points.push_back(make_point(stopping_distance, -footprint_.halfWidth()));
+
+  return marker;
+}
+
+visualization_msgs::msg::Marker Visualization::circleMarker(
+  const float radius, const float y_offset, const bool left) const
+{
+  visualization_msgs::msg::Marker marker = baseTrajectoryMarker();
+  marker.type = visualization_msgs::msg::Marker::CYLINDER;
+  marker.action = visualization_msgs::msg::Marker::ADD;
+
+  marker.scale.z = 0.01;
+  marker.color = k_trajectory_color;
+
+  marker.pose.orientation.x = 0.0;
+  marker.pose.orientation.y = 0.0;
+  marker.pose.orientation.z = 0.0;
+  marker.pose.orientation.w = 1.0;
+  marker.pose.position.x = 0.0;
+  marker.pose.position.z = 0.0;
+
+  marker.scale.x = 2.0 * radius;
+  marker.scale.y = 2.0 * radius;
+  marker.pose.position.y = left ? (radius + y_offset) : -(radius + y_offset);
 
   return marker;
 }

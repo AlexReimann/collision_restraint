@@ -63,7 +63,8 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
     this->create_publisher<geometry_msgs::msg::TwistStamped>("output_stamped", 1);
 
   pub_trajectory_visual_ =
-    this->create_publisher<visualization_msgs::msg::Marker>("visual/trajectory", 1);
+    this->create_publisher<visualization_msgs::msg::MarkerArray>("visual/trajectory", 1);
+  pub_point_visual_ = this->create_publisher<visualization_msgs::msg::Marker>("visual/point", 1);
 
   sub_point_cloud_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "sub_point_cloud", rclcpp::SystemDefaultsQoS(),
@@ -139,10 +140,12 @@ void CollisionRestraintNode::twistStampedCallback(
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
 
   float stop_distance = std::numeric_limits<float>::infinity();
+  Radii radii;
   if (input_linear != 0.0 || input_angular != 0.0) {
-    const auto [restraint, velocities, closest_point, distance] =
+    const auto [restraint, velocities, closest_point, distance, ret_radii] =
       collision_restraint_->restrain({input_linear, input_angular}, latest_point_cloud_);
     stop_distance = distance;
+    radii = ret_radii;
 
     const bool full_brake = velocities.linear_ == 0.0F && velocities.angular_ == 0.0F;
 
@@ -157,8 +160,7 @@ void CollisionRestraintNode::twistStampedCallback(
     output.twist.angular.z = velocities.angular_;
 
     if (!std::isnan(closest_point.x())) {
-      pub_trajectory_visual_->publish(
-        visualization_->pointMarker(closest_point.x(), closest_point.y()));
+      pub_point_visual_->publish(visualization_->pointMarker(closest_point.x(), closest_point.y()));
     }
   }
 
@@ -166,7 +168,7 @@ void CollisionRestraintNode::twistStampedCallback(
   pub_velocity_->publish(output.twist);
 
   pub_trajectory_visual_->publish(
-    visualization_->trajectoryMarker(input_linear, input_angular, stop_distance));
+    visualization_->trajectoryMarker(input_angular, stop_distance, radii));
 }
 
 }  // namespace collision_restraint
