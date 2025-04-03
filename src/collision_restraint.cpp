@@ -15,8 +15,10 @@ CollisionRestraint::CollisionRestraint(
 }
 
 std::tuple<bool, Velocities, PolarPoint, float> CollisionRestraint::restrain(
-  const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud) const
+  const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud)
 {
+  distance_.setVelocities(velocities.linear_, velocities.angular_);
+
   sensor_msgs::PointCloud2ConstIterator<float> iter_x(point_cloud, "x");
   sensor_msgs::PointCloud2ConstIterator<float> iter_y(point_cloud, "y");
   sensor_msgs::PointCloud2ConstIterator<float> iter_z(point_cloud, "z");
