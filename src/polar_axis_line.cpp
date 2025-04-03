@@ -121,8 +121,8 @@ std::tuple<float, float> PolarAxisLine::thetas(const float r) const
 
   const float theta = std::asin(m_ / r);
   // mirrored around y-axis == +-M_PI_2
-  const float offeset = M_F_PI_2 - std::abs(theta);
-  return {theta, (theta + std::copysign(2.0F * offeset, theta))};
+  const float offset = M_F_PI_2 - std::abs(theta);
+  return {theta, (theta + std::copysign(2.0F * offset, theta))};
 }
 
 }  // namespace collision_restraint
