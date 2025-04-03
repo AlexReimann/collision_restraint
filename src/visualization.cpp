@@ -109,7 +109,7 @@ visualization_msgs::msg::Marker Visualization::pointMarker(const float x, const 
 
   marker.ns = "closest_point";
   marker.id = 0;
-  marker.lifetime = rclcpp::Duration::from_seconds(1.0);
+  marker.lifetime = rclcpp::Duration::from_seconds(0.2);
 
   marker.type = visualization_msgs::msg::Marker::SPHERE;
   marker.action = visualization_msgs::msg::Marker::ADD;
