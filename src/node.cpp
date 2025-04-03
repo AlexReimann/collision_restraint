@@ -117,6 +117,13 @@ void CollisionRestraintNode::twistCallback(geometry_msgs::msg::Twist::SharedPtr 
 void CollisionRestraintNode::twistStampedCallback(
   geometry_msgs::msg::TwistStamped::SharedPtr twist_msg)
 {
+  if (latest_point_cloud_.data.empty()) {
+    RCLCPP_INFO_STREAM_THROTTLE(
+      this->get_logger(), *(this->get_clock()), 8000,
+      std::format("Did not yet receive a point cloud on {}", sub_point_cloud_->get_topic_name()));
+    return;
+  }
+
   geometry_msgs::msg::TwistStamped output(*twist_msg);
   const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
