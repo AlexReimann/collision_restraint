@@ -24,7 +24,7 @@ public:
 
   [[nodiscard]] Radii radii() const;
 
-  [[nodiscard]] float arcDistance(const float x, const float y) const;
+  [[nodiscard]] float angularDistance(const float x, const float y) const;
 
 private:
   [[nodiscard]] bool insideFootprint(const float x, const float y) const;

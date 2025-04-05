@@ -27,9 +27,9 @@ PolarPoint PolarPoint::polar(const float r, const float theta)
   return point;
 }
 
-float PolarPoint::arcToEucDistance(const float arc_distance, const float radius)
+float PolarPoint::angularToEucDistance(const float angular_distance, const float radius)
 {
-  return arc_distance / radius;
+  return angular_distance * radius;
 }
 
 float PolarPoint::x() const { return point_.real(); }

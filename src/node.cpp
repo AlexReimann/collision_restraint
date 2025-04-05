@@ -140,12 +140,19 @@ void CollisionRestraintNode::twistStampedCallback(
   const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
 
-  float stop_distance = std::numeric_limits<float>::infinity();
+  if (input_linear < 0.0F) {
+    // checks backwards currently not supported
+    pub_velocity_stamped_->publish(output);
+    pub_velocity_->publish(output.twist);
+    return;
+  }
+
+  float distance = std::numeric_limits<float>::infinity();
   Radii radii;
   if (input_linear != 0.0 || input_angular != 0.0) {
-    const auto [restraint, velocities, closest_point, distance, ret_radii] =
+    const auto [restraint, velocities, closest_point, ret_distance, ret_radii] =
       collision_restraint_->restrain({input_linear, input_angular}, latest_point_cloud_);
-    stop_distance = distance;
+    distance = ret_distance;
     radii = ret_radii;
 
     const bool full_brake = velocities.linear_ == 0.0F && velocities.angular_ == 0.0F;
@@ -168,12 +175,11 @@ void CollisionRestraintNode::twistStampedCallback(
   pub_velocity_stamped_->publish(output);
   pub_velocity_->publish(output.twist);
 
-  pub_trajectory_visual_->publish(
-    visualization_->trajectoryMarker(input_angular, stop_distance, radii));
+  pub_trajectory_visual_->publish(visualization_->trajectoryMarker(input_angular, distance, radii));
 
-  if (std::isfinite(stop_distance)) {
+  if (std::isfinite(distance)) {
     std_msgs::msg::Float32 distance_msg;
-    distance_msg.data = stop_distance;
+    distance_msg.data = distance;
     pub_distance_->publish(distance_msg);
   }
 }

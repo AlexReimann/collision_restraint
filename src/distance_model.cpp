@@ -61,7 +61,7 @@ bool DistanceModel::isStraight() const { return straight_; }
 bool DistanceModel::isLeftTurn() const { return left_turn_; }
 Radii DistanceModel::radii() const { return radii_; }
 
-float DistanceModel::arcDistance(const float x, const float y) const
+float DistanceModel::angularDistance(const float x, const float y) const
 {
   PolarPoint point{x, y};
 

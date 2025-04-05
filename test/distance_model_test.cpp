@@ -104,41 +104,43 @@ TEST_CASE("distance_straight", "[distance_model]")
 
   SECTION("inside footprint")
   {
-    CHECK(model.arcDistance(0.0F, 0.0F) == 0.0F);
-    CHECK(model.arcDistance(0.0F, half_width) == 0.0F);
-    CHECK(model.arcDistance(0.0F, -half_width) == 0.0F);
-    CHECK(model.arcDistance(front_offset, 0.0F) == 0.0F);
-    CHECK(model.arcDistance(-back_offset, 0.0F) == 0.0F);
+    CHECK(model.angularDistance(0.0F, 0.0F) == 0.0F);
+    CHECK(model.angularDistance(0.0F, half_width) == 0.0F);
+    CHECK(model.angularDistance(0.0F, -half_width) == 0.0F);
+    CHECK(model.angularDistance(front_offset, 0.0F) == 0.0F);
+    CHECK(model.angularDistance(-back_offset, 0.0F) == 0.0F);
 
-    CHECK(model.arcDistance(0.5F * front_offset, 0.5F * half_width) == 0.0F);
+    CHECK(model.angularDistance(0.5F * front_offset, 0.5F * half_width) == 0.0F);
   }
 
   SECTION("forwards")
   {
     model.setVelocities(1.0F, 0.0F);
-    CHECK(model.arcDistance(front_offset + 1.0F, 0.0F) == 1.0F);
-    CHECK(model.arcDistance(2.0F * front_offset, 0.0F) == front_offset);
+    CHECK(model.angularDistance(front_offset + 1.0F, 0.0F) == 1.0F);
+    CHECK(model.angularDistance(2.0F * front_offset, 0.0F) == front_offset);
 
-    CHECK(model.arcDistance(front_offset + 1.1F, 0.5F * half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(front_offset + 1.1F, -0.5F * half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(front_offset + 1.1F, half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(front_offset + 1.1F, half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(front_offset + 1.1F, 0.5F * half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(front_offset + 1.1F, -0.5F * half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(front_offset + 1.1F, half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(front_offset + 1.1F, half_width) == Catch::Approx(1.1F));
 
-    CHECK(model.arcDistance(-2.0F * back_offset, 0.0F) == std::numeric_limits<float>::infinity());
+    CHECK(
+      model.angularDistance(-2.0F * back_offset, 0.0F) == std::numeric_limits<float>::infinity());
   }
 
   SECTION("backwards")
   {
     model.setVelocities(-1.0F, 0.0F);
-    CHECK(model.arcDistance(-back_offset - 1.0F, 0.0F) == 1.0F);
-    CHECK(model.arcDistance(-2.0F * back_offset, 0.0F) == back_offset);
+    CHECK(model.angularDistance(-back_offset - 1.0F, 0.0F) == 1.0F);
+    CHECK(model.angularDistance(-2.0F * back_offset, 0.0F) == back_offset);
 
-    CHECK(model.arcDistance(-back_offset - 1.1F, 0.5F * half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(-back_offset - 1.1F, -0.5F * half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(-back_offset - 1.1F, half_width) == Catch::Approx(1.1F));
-    CHECK(model.arcDistance(-back_offset - 1.1F, half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(-back_offset - 1.1F, 0.5F * half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(-back_offset - 1.1F, -0.5F * half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(-back_offset - 1.1F, half_width) == Catch::Approx(1.1F));
+    CHECK(model.angularDistance(-back_offset - 1.1F, half_width) == Catch::Approx(1.1F));
 
-    CHECK(model.arcDistance(2.0F * front_offset, 0.0F) == std::numeric_limits<float>::infinity());
+    CHECK(
+      model.angularDistance(2.0F * front_offset, 0.0F) == std::numeric_limits<float>::infinity());
   }
 }
 
@@ -160,17 +162,20 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
 
     SECTION("not_in_path")
     {
-      CHECK(model.arcDistance(0.0F, 2.0F * half_width) == std::numeric_limits<float>::infinity());
-      CHECK(model.arcDistance(0.0F, (half_width + eps)) == std::numeric_limits<float>::infinity());
+      CHECK(
+        model.angularDistance(0.0F, 2.0F * half_width) == std::numeric_limits<float>::infinity());
+      CHECK(
+        model.angularDistance(0.0F, (half_width + eps)) == std::numeric_limits<float>::infinity());
 
       const float radius = half_width + turn_radius;
       const float outer_point =
         std::sqrt((radius * radius) + (front_offset * front_offset)) - turn_radius;
       CHECK(
-        model.arcDistance(0.0F, -(outer_point + eps)) == std::numeric_limits<float>::infinity());
+        model.angularDistance(0.0F, -(outer_point + eps)) ==
+        std::numeric_limits<float>::infinity());
 
       CHECK(
-        model.arcDistance(0.0F, -(half_width + front_offset)) ==
+        model.angularDistance(0.0F, -(half_width + front_offset)) ==
         std::numeric_limits<float>::infinity());
     }
 
@@ -178,36 +183,38 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // 90 degree offsets
       CHECK(
-        model.arcDistance(turn_radius + half_width - eps, turn_radius + front_offset) ==
+        model.angularDistance(turn_radius + half_width - eps, turn_radius + front_offset) ==
         Catch::Approx(M_PI_2));
-      CHECK(model.arcDistance(-front_offset, 2.0F * turn_radius) == Catch::Approx(M_PI));
+      CHECK(model.angularDistance(-front_offset, 2.0F * turn_radius) == Catch::Approx(M_PI));
       CHECK(
-        model.arcDistance(-turn_radius, -(front_offset - turn_radius)) ==
+        model.angularDistance(-turn_radius, -(front_offset - turn_radius)) ==
         Catch::Approx(M_PI + M_PI_2));
 
       // directly in front
-      CHECK_THAT(model.arcDistance(front_offset + eps, 0.0F), Catch::Matchers::WithinAbs(eps, eps));
+      CHECK_THAT(
+        model.angularDistance(front_offset + eps, 0.0F), Catch::Matchers::WithinAbs(eps, eps));
 
       // behind
-      CHECK(model.arcDistance(-(back_offset + 0.2), 0.0F) > 4.0F);
+      CHECK(model.angularDistance(-(back_offset + 0.2), 0.0F) > 4.0F);
     }
 
     SECTION("left_turn_left_side")
     {
       // 90 degree offsets
       CHECK_THAT(
-        model.arcDistance(turn_radius - half_width - eps, turn_radius + front_offset - eps),
+        model.angularDistance(turn_radius - half_width - eps, turn_radius + front_offset - eps),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI_2), 0.01F));
       CHECK_THAT(
-        model.arcDistance(-front_offset + eps, 2.0F * turn_radius - half_width - eps),
+        model.angularDistance(-front_offset + eps, 2.0F * turn_radius - half_width - eps),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI), 0.01F));
       CHECK_THAT(
-        model.arcDistance(-(turn_radius - half_width - eps), -(front_offset - turn_radius - eps)),
+        model.angularDistance(
+          -(turn_radius - half_width - eps), -(front_offset - turn_radius - eps)),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI + M_PI_2), 0.01F));
 
       // directly next to it
       CHECK_THAT(
-        model.arcDistance(front_offset, half_width + eps),
+        model.angularDistance(front_offset, half_width + eps),
         Catch::Matchers::WithinAbs(eps, eps * 10.0F));
     }
 
@@ -215,17 +222,17 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // directly next to it
       CHECK_THAT(
-        model.arcDistance(-back_offset + eps, -(half_width + eps)),
+        model.angularDistance(-back_offset + eps, -(half_width + eps)),
         Catch::Matchers::WithinAbs(eps, 10.0F * eps));
-      CHECK(std::isnormal(model.arcDistance(0.0F, -(half_width + eps))));
-      CHECK(std::isnormal(model.arcDistance(back_offset - eps, -(half_width + eps))));
+      CHECK(std::isnormal(model.angularDistance(0.0F, -(half_width + eps))));
+      CHECK(std::isnormal(model.angularDistance(back_offset - eps, -(half_width + eps))));
     }
 
     SECTION("big_radius")
     {
       model.setVelocities(2.0F, 2.0F * g_straight_threshold);
-      CHECK(model.arcDistance(-(back_offset + eps), 0.0F) > 2.0F);
-      CHECK(model.arcDistance(-(3.0 * back_offset), 0.0F) > 2.0F);
+      CHECK(model.angularDistance(-(back_offset + eps), 0.0F) > 2.0F);
+      CHECK(model.angularDistance(-(3.0 * back_offset), 0.0F) > 2.0F);
     }
   }
 
@@ -237,16 +244,19 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     SECTION("not_in_path")
     {
       CHECK(
-        model.arcDistance(0.0F, -(2.0F * half_width)) == std::numeric_limits<float>::infinity());
-      CHECK(model.arcDistance(0.0F, -(half_width + eps)) == std::numeric_limits<float>::infinity());
+        model.angularDistance(0.0F, -(2.0F * half_width)) ==
+        std::numeric_limits<float>::infinity());
+      CHECK(
+        model.angularDistance(0.0F, -(half_width + eps)) == std::numeric_limits<float>::infinity());
 
       const float radius = half_width + turn_radius;
       const float outer_point =
         std::sqrt((radius * radius) + (front_offset * front_offset)) - turn_radius;
-      CHECK(model.arcDistance(0.0F, outer_point + eps) == std::numeric_limits<float>::infinity());
+      CHECK(
+        model.angularDistance(0.0F, outer_point + eps) == std::numeric_limits<float>::infinity());
 
       CHECK(
-        model.arcDistance(0.0F, half_width + front_offset) ==
+        model.angularDistance(0.0F, half_width + front_offset) ==
         std::numeric_limits<float>::infinity());
     }
 
@@ -254,36 +264,37 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // 90 degree offsets
       CHECK(
-        model.arcDistance(turn_radius + half_width - eps, -(turn_radius + front_offset)) ==
+        model.angularDistance(turn_radius + half_width - eps, -(turn_radius + front_offset)) ==
         Catch::Approx(M_PI_2));
-      CHECK(model.arcDistance(-front_offset, -(2.0F * turn_radius)) == Catch::Approx(M_PI));
+      CHECK(model.angularDistance(-front_offset, -(2.0F * turn_radius)) == Catch::Approx(M_PI));
       CHECK(
-        model.arcDistance(-turn_radius, front_offset - turn_radius) ==
+        model.angularDistance(-turn_radius, front_offset - turn_radius) ==
         Catch::Approx(M_PI + M_PI_2));
 
       // directly in front
-      CHECK_THAT(model.arcDistance(front_offset + eps, 0.0F), Catch::Matchers::WithinAbs(eps, eps));
+      CHECK_THAT(
+        model.angularDistance(front_offset + eps, 0.0F), Catch::Matchers::WithinAbs(eps, eps));
 
       // behind
-      CHECK(model.arcDistance(-(back_offset + 0.2), 0.0F) > 4.0F);
+      CHECK(model.angularDistance(-(back_offset + 0.2), 0.0F) > 4.0F);
     }
 
     SECTION("right_turn_right_side")
     {
       // 90 degree offsets
       CHECK_THAT(
-        model.arcDistance(turn_radius - half_width - eps, -(turn_radius + front_offset - eps)),
+        model.angularDistance(turn_radius - half_width - eps, -(turn_radius + front_offset - eps)),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI_2), 0.01F));
       CHECK_THAT(
-        model.arcDistance(-front_offset + eps, -(2.0F * turn_radius - half_width - eps)),
+        model.angularDistance(-front_offset + eps, -(2.0F * turn_radius - half_width - eps)),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI), 0.01F));
       CHECK_THAT(
-        model.arcDistance(-(turn_radius - half_width - eps), front_offset - turn_radius - eps),
+        model.angularDistance(-(turn_radius - half_width - eps), front_offset - turn_radius - eps),
         Catch::Matchers::WithinRel(static_cast<float>(M_PI + M_PI_2), 0.01F));
 
       // directly next to it
       CHECK_THAT(
-        model.arcDistance(front_offset, -half_width - eps),
+        model.angularDistance(front_offset, -half_width - eps),
         Catch::Matchers::WithinAbs(eps, eps * 10.0F));
     }
 
@@ -291,10 +302,10 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // directly next to it
       CHECK_THAT(
-        model.arcDistance(-back_offset + eps, half_width + eps),
+        model.angularDistance(-back_offset + eps, half_width + eps),
         Catch::Matchers::WithinAbs(eps, 10.0F * eps));
-      CHECK(std::isnormal(model.arcDistance(0.0F, half_width + eps)));
-      CHECK(std::isnormal(model.arcDistance(back_offset - eps, half_width + eps)));
+      CHECK(std::isnormal(model.angularDistance(0.0F, half_width + eps)));
+      CHECK(std::isnormal(model.angularDistance(back_offset - eps, half_width + eps)));
     }
   }
 }
@@ -318,42 +329,43 @@ TEST_CASE("distance_angular_spot_turn", "[distance_model]")
     {
       const float outer_point =
         std::sqrt((half_width * half_width) + (front_offset * front_offset));
-      CHECK(model.arcDistance(0.0F, outer_point + eps) == std::numeric_limits<float>::infinity());
       CHECK(
-        model.arcDistance(-(outer_point + eps), -(outer_point + eps)) ==
+        model.angularDistance(0.0F, outer_point + eps) == std::numeric_limits<float>::infinity());
+      CHECK(
+        model.angularDistance(-(outer_point + eps), -(outer_point + eps)) ==
         std::numeric_limits<float>::infinity());
-      CHECK(std::isnormal(model.arcDistance(0.0F, outer_point - eps)));
+      CHECK(std::isnormal(model.angularDistance(0.0F, outer_point - eps)));
     }
 
     SECTION("left_turn")
     {
       // directly in front
-      CHECK(model.arcDistance(front_offset + eps, -half_width + 3.0 * eps) > 0.0F);
-      CHECK(model.arcDistance(front_offset + eps, -half_width + 3.0 * eps) <= 0.001F);
+      CHECK(model.angularDistance(front_offset + eps, -half_width + 3.0 * eps) > 0.0F);
+      CHECK(model.angularDistance(front_offset + eps, -half_width + 3.0 * eps) <= 0.001F);
       // just behind
-      CHECK(model.arcDistance(-(back_offset + eps), half_width - 3.0 * eps) > 0.0F);
-      CHECK(model.arcDistance(-(back_offset + eps), half_width - 3.0 * eps) <= 0.001F);
+      CHECK(model.angularDistance(-(back_offset + eps), half_width - 3.0 * eps) > 0.0F);
+      CHECK(model.angularDistance(-(back_offset + eps), half_width - 3.0 * eps) <= 0.001F);
       // directly next to it
-      CHECK(model.arcDistance(-back_offset + 3.0F * eps, -(half_width + eps)) > 0.0F);
-      CHECK(model.arcDistance(-back_offset + 3.0F * eps, -(half_width + eps)) <= 0.001F);
-      CHECK(model.arcDistance(front_offset - eps, half_width + eps) > 0.0F);
-      CHECK(model.arcDistance(front_offset - eps, half_width + eps) <= 0.001F);
+      CHECK(model.angularDistance(-back_offset + 3.0F * eps, -(half_width + eps)) > 0.0F);
+      CHECK(model.angularDistance(-back_offset + 3.0F * eps, -(half_width + eps)) <= 0.001F);
+      CHECK(model.angularDistance(front_offset - eps, half_width + eps) > 0.0F);
+      CHECK(model.angularDistance(front_offset - eps, half_width + eps) <= 0.001F);
     }
 
     SECTION("right_turn")
     {
       model.setVelocities(0.0F, -1.0F);
       // directly in front
-      CHECK(model.arcDistance(front_offset + eps, half_width - 3.0 * eps) > 0.0F);
-      CHECK(model.arcDistance(front_offset + eps, half_width - 3.0 * eps) <= 0.001F);
+      CHECK(model.angularDistance(front_offset + eps, half_width - 3.0 * eps) > 0.0F);
+      CHECK(model.angularDistance(front_offset + eps, half_width - 3.0 * eps) <= 0.001F);
       // just behind
-      CHECK(model.arcDistance(-(back_offset + eps), -half_width + 3.0 * eps) > 0.0F);
-      CHECK(model.arcDistance(-(back_offset + eps), -half_width + 3.0 * eps) <= 0.001F);
+      CHECK(model.angularDistance(-(back_offset + eps), -half_width + 3.0 * eps) > 0.0F);
+      CHECK(model.angularDistance(-(back_offset + eps), -half_width + 3.0 * eps) <= 0.001F);
       // directly next to it
-      CHECK(model.arcDistance(-back_offset + 3.0F * eps, half_width + eps) > 0.0F);
-      CHECK(model.arcDistance(-back_offset + 3.0F * eps, half_width + eps) <= 0.001F);
-      CHECK(model.arcDistance(front_offset - eps, -half_width - eps) > 0.0F);
-      CHECK(model.arcDistance(front_offset - eps, -half_width - eps) <= 0.001F);
+      CHECK(model.angularDistance(-back_offset + 3.0F * eps, half_width + eps) > 0.0F);
+      CHECK(model.angularDistance(-back_offset + 3.0F * eps, half_width + eps) <= 0.001F);
+      CHECK(model.angularDistance(front_offset - eps, -half_width - eps) > 0.0F);
+      CHECK(model.angularDistance(front_offset - eps, -half_width - eps) <= 0.001F);
     }
   }
 }
