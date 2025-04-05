@@ -220,6 +220,13 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
       CHECK(std::isnormal(model.arcDistance(0.0F, -(half_width + eps))));
       CHECK(std::isnormal(model.arcDistance(back_offset - eps, -(half_width + eps))));
     }
+
+    SECTION("big_radius")
+    {
+      model.setVelocities(2.0F, 2.0F * g_straight_threshold);
+      CHECK(model.arcDistance(-(back_offset + eps), 0.0F) > 2.0F);
+      CHECK(model.arcDistance(-(3.0 * back_offset), 0.0F) > 2.0F);
+    }
   }
 
   SECTION("right_turn")
