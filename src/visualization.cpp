@@ -131,7 +131,7 @@ visualization_msgs::msg::Marker Visualization::baseTrajectoryMarker() const
 
   marker.ns = "trajectory";
   marker.id = 0;
-  marker.lifetime = rclcpp::Duration::from_seconds(1.0);
+  marker.lifetime = rclcpp::Duration::from_seconds(0.5);
 
   return marker;
 }
