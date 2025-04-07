@@ -1,16 +1,19 @@
 /**:
   ros__parameters:
     # Fixed parameters loaded on startup
-    footprint_length_front: 1.0
-    footprint_length_back: 0.0
+    base_link_frame: "base_link"
+
+    footprint_length_front: 1.0  # Distance of the robot front from base_link
+    footprint_length_back: 0.0  # Distance of the robot back from base_link. Needs to be >= 0.0
     footprint_width: 1.0
 
     # Dynamic parameters
-    deceleration: 1.0
-    execution_delay: 0.0
+    deceleration: 1.0  # How fast the robot can decelerate. Used to determine brake distance -> velocity scaling
+    execution_delay: 0.0  # Delay between sent commands and actual execution. Can result in extra distance from the obstacle.
 
-    min_obstacle_height: -1.0
-    max_obstacle_height: 1.0
+    distance_buffer: 0.0  # Buffer distance to the obstacle. Aka. distance we stop in front of the obstacle __along the trajectory__.
+    ignore_inside_footprint: false  # Ignore obstacle points inside the footprint
 
-    ignore_inside_footprint: false
-    distance_buffer: 0.0
+    min_obstacle_height: -1.0  # Obsacle points below are ignored (in base_link_frame)
+    max_obstacle_height: 1.0  # Obsacle points above are ignored (in base_link_frame)
+
