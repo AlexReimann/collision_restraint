@@ -46,6 +46,8 @@ private:
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_velocity_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr pub_velocity_stamped_;
+
+  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_footprint_visual_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr pub_trajectory_visual_;
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_point_visual_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr pub_distance_;

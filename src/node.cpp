@@ -62,6 +62,11 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
   pub_velocity_stamped_ =
     this->create_publisher<geometry_msgs::msg::TwistStamped>("output_stamped", 1);
 
+  rclcpp::QoS qos_latched(rclcpp::KeepLast(1));
+  qos_latched.transient_local().reliable();
+  pub_footprint_visual_ =
+    this->create_publisher<visualization_msgs::msg::Marker>("visual/footprint", qos_latched);
+
   pub_trajectory_visual_ =
     this->create_publisher<visualization_msgs::msg::MarkerArray>("visual/trajectory", 1);
   pub_point_visual_ = this->create_publisher<visualization_msgs::msg::Marker>("visual/point", 1);
@@ -102,6 +107,8 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
 
 void CollisionRestraintNode::pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg)
 {
+  pub_footprint_visual_->publish(visualization_->footprintMarker());
+
   if (cloud_msg->header.frame_id == base_link_frame_) {
     latest_point_cloud_ = *cloud_msg;
     return;
