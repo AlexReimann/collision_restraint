@@ -168,4 +168,41 @@ visualization_msgs::msg::Marker Visualization::pointMarker(const float x, const 
   return marker;
 }
 
+visualization_msgs::msg::Marker Visualization::footprintMarker() const
+{
+  visualization_msgs::msg::Marker marker;
+  marker.header.frame_id = frame_;
+
+  marker.ns = "footprint";
+  marker.id = 0;
+  marker.frame_locked = true;
+
+  marker.type = visualization_msgs::msg::Marker::LINE_STRIP;
+  marker.action = visualization_msgs::msg::Marker::ADD;
+
+  marker.scale.x = 0.03;
+
+  marker.color.r = 0.0F;
+  marker.color.g = 1.0F;
+  marker.color.b = 0.0F;
+  marker.color.a = 1.0F;
+
+  const auto make_point = [](const float x, const float y) -> geometry_msgs::msg::Point {
+    geometry_msgs::msg::Point point;
+    point.z = 0.03;  // float above the trajectory markers
+
+    point.x = static_cast<double>(x);
+    point.y = static_cast<double>(y);
+    return point;
+  };
+
+  marker.points.push_back(make_point(footprint_.offsetFront(), footprint_.halfWidth()));
+  marker.points.push_back(make_point(footprint_.offsetFront(), -footprint_.halfWidth()));
+  marker.points.push_back(make_point(footprint_.offsetBack(), -footprint_.halfWidth()));
+  marker.points.push_back(make_point(footprint_.offsetBack(), footprint_.halfWidth()));
+  marker.points.push_back(make_point(footprint_.offsetFront(), footprint_.halfWidth()));
+
+  return marker;
+}
+
 }  // namespace collision_restraint
