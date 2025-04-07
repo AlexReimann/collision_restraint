@@ -40,12 +40,13 @@ visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
   const bool left = angular_velocity >= 0.0 ? true : false;
 
   visualization_msgs::msg::Marker outer = circleMarker(radii.outer_, -(radii.outer_ - radii.center_), left);
+  outer.pose.position.z = -0.02;
   array.markers.push_back(outer);
 
   if (std::isnormal(radii.center_)) {
     visualization_msgs::msg::Marker center = circleMarker(radii.center_, 0.0F, left);
     center.id = 1;
-    center.pose.position.z = 0.01;
+    center.pose.position.z = -0.01;
     center.color.b = 0.7;
     array.markers.push_back(center);
   }
@@ -54,7 +55,7 @@ visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
     visualization_msgs::msg::Marker inner =
       circleMarker(radii.inner_, footprint_.halfWidth(), left);
     inner.id = 2;
-    inner.pose.position.z = 0.02;
+    inner.pose.position.z = 0.0;
     inner.color.b = 0.3;
     array.markers.push_back(inner);
   }
@@ -115,7 +116,6 @@ visualization_msgs::msg::Marker Visualization::circleMarker(
   marker.pose.orientation.z = 0.0;
   marker.pose.orientation.w = 1.0;
   marker.pose.position.x = 0.0;
-  marker.pose.position.z = 0.0;
 
   marker.scale.x = 2.0 * radius;
   marker.scale.y = 2.0 * radius;
@@ -189,7 +189,7 @@ visualization_msgs::msg::Marker Visualization::footprintMarker() const
 
   const auto make_point = [](const float x, const float y) -> geometry_msgs::msg::Point {
     geometry_msgs::msg::Point point;
-    point.z = 0.03;  // float above the trajectory markers
+    point.z = 0.01;  // float above the trajectory markers
 
     point.x = static_cast<double>(x);
     point.y = static_cast<double>(y);
