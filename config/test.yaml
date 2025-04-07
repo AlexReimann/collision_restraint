@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    footprint_length_front: 0.05
+    footprint_length_front: 0.3
     footprint_length_back: 0.2
     footprint_width: 0.3
 
