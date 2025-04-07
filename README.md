@@ -7,6 +7,7 @@ Example usage: Save teleoperation.
 ## Quick Guide
 * Input obstacles as `PointCloud2` on topic `/collision_restraint/sub_point_cloud` 
 * Input command velocties on `/collision_restraint/sub_cmd_vel` / `/collision_restraint/sub_cmd_vel_stamped`
+    * Expects linear velocity on `twist.linear.x` and angular velocity on `twist.angular.z`
 * Output command velocities on `/collision_restraint/output` / `/collision_restraint/output_stamped`
 * Adjust footprint, deceleration and other parameters in the `config/default.yaml`
 * Visualization available on `/collision_restraint/visual/*`
