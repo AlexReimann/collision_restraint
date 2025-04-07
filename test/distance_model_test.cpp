@@ -11,7 +11,7 @@
 
 using namespace collision_restraint;  // NOLINT
 
-std::shared_ptr<Params> params = std::make_shared<Params>(1.0F, 0.0F, -1.0F, 1.0F, false, 0.0F);
+std::shared_ptr<Params> params = std::make_shared<Params>(1.0F, -1.0F, 1.0F, false, 0.0F);
 
 TEST_CASE("constructor", "[distance_model]")
 {

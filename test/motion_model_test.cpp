@@ -9,14 +9,11 @@
 
 using namespace collision_restraint;  // NOLINT
 
-TEST_CASE("constructor", "[motion_model]") { CHECK_NOTHROW(MotionModel(0.0F, 1.0F)); }
+TEST_CASE("constructor", "[motion_model]") { CHECK_NOTHROW(MotionModel(0.0F)); }
 
 TEST_CASE("stoppingDistance", "[motion_model]")
 {
   CHECK(MotionModel(1.0F).stoppingDistance(1.0F) == Catch::Approx(0.5F));
-  CHECK(MotionModel(1.0F, 1.0F).stoppingDistance(1.0F) == Catch::Approx(1.5F));
-
-  CHECK(MotionModel(2.0F, 0.5F).stoppingDistance(1.0F) == Catch::Approx(0.75F));
 }
 
 TEST_CASE("scaleToStopDistance", "[motion_model]")
@@ -26,10 +23,6 @@ TEST_CASE("scaleToStopDistance", "[motion_model]")
     MotionModel model(2.0F);
     CHECK(model.scaleToStopDistance({3.0F, 0.0F}, 0.0F).linear_ == 0.0F);
     CHECK(model.scaleToStopDistance({3.0F, 0.0F}, 0.0F).angular_ == 0.0F);
-
-    MotionModel model_delayed(1.0F, 0.5F);
-    CHECK(model_delayed.scaleToStopDistance({3.0F, 0.0F}, 0.1F).linear_ == 0.0F);
-    CHECK(model_delayed.scaleToStopDistance({3.0F, 0.0F}, 0.1F).angular_ == 0.0F);
   }
 
   SECTION("linear")
@@ -37,8 +30,6 @@ TEST_CASE("scaleToStopDistance", "[motion_model]")
     CHECK(MotionModel(1.0F).scaleToStopDistance({1.0F, 0.0F}, 0.5F).linear_ == 1.0F);
     CHECK(MotionModel(2.0F).scaleToStopDistance({1.0F, 0.0F}, 0.25F).linear_ == 1.0F);
     CHECK(MotionModel(2.0F).scaleToStopDistance({2.0F, 0.0F}, 0.25F).linear_ == 1.0F);
-
-    CHECK(MotionModel(2.0F, 0.5F).scaleToStopDistance({2.0F, 0.0F}, 1.25F).linear_ == 1.0F);
   }
 
   SECTION("angular")

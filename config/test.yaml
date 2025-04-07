@@ -9,7 +9,6 @@
 
     # Dynamic parameters
     deceleration: 0.2
-    execution_delay: 0.1
 
     distance_buffer: 0.4
     ignore_inside_footprint: false

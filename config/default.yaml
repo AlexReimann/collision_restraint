@@ -9,7 +9,6 @@
 
     # Dynamic parameters
     deceleration: 1.0  # How fast the robot can decelerate. Used to determine brake distance -> velocity scaling
-    execution_delay: 0.0  # Delay between sent commands and actual execution. Can result in extra distance from the obstacle.
 
     distance_buffer: 0.0  # Buffer distance to the obstacle. Aka. distance we stop in front of the obstacle __along the trajectory__.
     ignore_inside_footprint: false  # Ignore obstacle points inside the footprint

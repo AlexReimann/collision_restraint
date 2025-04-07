@@ -34,7 +34,6 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
   this->declare_parameter("deceleration", 1.0);
-  this->declare_parameter("execution_delay", 0.0);
 
   this->declare_parameter("min_obstacle_height", -1.0);
   this->declare_parameter("max_obstacle_height", 1.0);
@@ -89,8 +88,6 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
     // TODO(me): Fix ugly prone to failure if-else
     if (parameter.get_name() == "deceleration") {
       params_->deceleration_ = static_cast<float>(parameter.as_double());
-    } else if (parameter.get_name() == "execution_delay") {
-      params_->execution_delay_ = static_cast<float>(parameter.as_double());
 
     } else if (parameter.get_name() == "min_obstacle_height") {
       params_->min_obstacle_height_ = static_cast<float>(parameter.as_double());

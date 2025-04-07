@@ -8,7 +8,6 @@ inline constexpr float g_straight_threshold = 0.001F;
 struct Params
 {
   float deceleration_;
-  float execution_delay_;
 
   float min_obstacle_height_;
   float max_obstacle_height_;
