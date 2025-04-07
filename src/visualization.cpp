@@ -39,7 +39,8 @@ visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
 
   const bool left = angular_velocity >= 0.0 ? true : false;
 
-  visualization_msgs::msg::Marker outer = circleMarker(radii.outer_, -(radii.outer_ - radii.center_), left);
+  visualization_msgs::msg::Marker outer =
+    circleMarker(radii.outer_, -(radii.outer_ - radii.center_), left);
   outer.pose.position.z = -0.02;
   array.markers.push_back(outer);
 
