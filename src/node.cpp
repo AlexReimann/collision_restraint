@@ -2,10 +2,11 @@
 
 #include <format>
 #include <rclcpp/clock.hpp>
-#include <rclcpp/time.hpp>
+#include <rclcpp/duration.hpp>
 #include <rclcpp/qos.hpp>
 #include <stdexcept>
 #include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
+#include <tuple>
 
 #include "collision_restraint/collision_restraint.hpp"
 #include "collision_restraint/footprint.hpp"
@@ -16,8 +17,10 @@
 namespace collision_restraint
 {
 
-CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
+CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint"), enable_{true}
 {
+  snooze_stop_time_ = this->now();
+
   params_ = std::make_shared<Params>();
   parameter_callback_ = this->add_post_set_parameters_callback(
     std::bind(&CollisionRestraintNode::parametersCallback, this, std::placeholders::_1));
@@ -28,6 +31,7 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
   tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
+  this->declare_parameter("snooze_time", 20);
   this->declare_parameter("deceleration", 1.0);
 
   this->declare_parameter("min_obstacle_height", -1.0);
@@ -65,6 +69,13 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
   pub_point_visual_ = this->create_publisher<visualization_msgs::msg::Marker>("visual/point", 1);
   pub_distance_ = this->create_publisher<std_msgs::msg::Float32>("distance", 1);
 
+  sub_enable_ = this->create_subscription<std_msgs::msg::Bool>(
+    "enable", rclcpp::SystemDefaultsQoS(),
+    std::bind(&CollisionRestraintNode::enableCallback, this, std::placeholders::_1));
+  sub_snooze_ = this->create_subscription<std_msgs::msg::Empty>(
+    "snooze", rclcpp::SystemDefaultsQoS(),
+    std::bind(&CollisionRestraintNode::snoozeCallback, this, std::placeholders::_1));
+
   sub_point_cloud_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "sub_point_cloud", rclcpp::SystemDefaultsQoS(),
     std::bind(&CollisionRestraintNode::pointCloudCallback, this, std::placeholders::_1));
@@ -94,6 +105,18 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
       params_->distance_buffer_ = static_cast<float>(parameter.as_double());
     }
   }
+}
+
+void CollisionRestraintNode::enableCallback(std_msgs::msg::Bool::SharedPtr enable_msg)
+{
+  enable_ = enable_msg->data;
+}
+
+void CollisionRestraintNode::snoozeCallback(std_msgs::msg::Empty::SharedPtr unused)
+{
+  std::ignore = unused;
+  snooze_stop_time_ =
+    this->now() + rclcpp::Duration(this->get_parameter("snooze_time").as_int(), 0);
 }
 
 void CollisionRestraintNode::pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg)
@@ -138,7 +161,7 @@ void CollisionRestraintNode::twistStampedCallback(
   const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
 
-  if (input_linear < 0.0F) {
+  if (input_linear < 0.0F || !enable_ || this->now() < snooze_stop_time_) {
     // checks backwards currently not supported
     pub_velocity_stamped_->publish(output);
     pub_velocity_->publish(output.twist);

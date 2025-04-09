@@ -5,11 +5,14 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
-#include <std_msgs/msg/float32.hpp>
 #include <memory>
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp/time.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/float32.hpp>
 #include <string>
 #include <vector>
 #include <visualization_msgs/msg/marker.hpp>
@@ -29,6 +32,9 @@ public:
 private:
   void parametersCallback(const std::vector<rclcpp::Parameter> & parameters);
 
+  void enableCallback(std_msgs::msg::Bool::SharedPtr enable_msg);
+  void snoozeCallback(std_msgs::msg::Empty::SharedPtr unused);
+
   void pointCloudCallback(sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg);
 
   void twistCallback(geometry_msgs::msg::Twist::SharedPtr twist_msg);
@@ -36,6 +42,9 @@ private:
 
   std::shared_ptr<Params> params_;
   rclcpp::node_interfaces::PostSetParametersCallbackHandle::SharedPtr parameter_callback_;
+
+  bool enable_;
+  rclcpp::Time snooze_stop_time_;
 
   std::string base_link_frame_;
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -51,6 +60,9 @@ private:
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr pub_trajectory_visual_;
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_point_visual_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr pub_distance_;
+
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr sub_enable_;
+  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_snooze_;
 
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_point_cloud_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist_;
