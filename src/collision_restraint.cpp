@@ -46,9 +46,9 @@ std::tuple<bool, Velocities, PolarPoint, float, Radii> CollisionRestraint::restr
 
   const PolarPoint closest_point{x, y};
   const float distance =
-    (distance_.isStraight()
-       ? min_angular_distance
-       : PolarPoint::angularToEucDistance(min_angular_distance, closest_point.r()));
+    (distance_.isStraight() ? min_angular_distance
+                            : PolarPoint::angularToEucDistance(
+                                min_angular_distance, distance_.turnTransform(closest_point).r()));
 
   const float min_distance = distance - params_->distance_buffer_;
   if (min_distance > stop_distance) {

@@ -25,6 +25,7 @@ public:
   [[nodiscard]] Radii radii() const;
 
   [[nodiscard]] float angularDistance(const float x, const float y) const;
+  [[nodiscard]] PolarPoint turnTransform(const PolarPoint & point) const;
 
 private:
   [[nodiscard]] bool insideFootprint(const float x, const float y) const;

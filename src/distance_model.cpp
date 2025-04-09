@@ -120,9 +120,7 @@ float DistanceModel::straightDistance(const float x, const float y) const
 
 float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
 {
-  // transform into rotation center frame
-  const float y_turn_adjusted = left_turn_ ? point_base_link.y() : -point_base_link.y();
-  const PolarPoint point{point_base_link.x(), y_turn_adjusted - radii_.center_};
+  const PolarPoint point = turnTransform(point_base_link);
 
   if (point.r() < radii_.inner_ || point.r() > radii_.outer_) {
     return std::numeric_limits<float>::infinity();
@@ -145,6 +143,17 @@ float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
   const float right_distance = right_->distance(point.theta(), point.r(), true);
 
   return std::min({front_distance, left_distance, right_distance, back_distance});
+}
+
+PolarPoint DistanceModel::turnTransform(const PolarPoint & base_link_point) const
+{
+  if (straight_) {
+    return base_link_point;
+  }
+
+  // transform into rotation center frame
+  const float y_turn_adjusted = left_turn_ ? base_link_point.y() : -base_link_point.y();
+  return {base_link_point.x(), y_turn_adjusted - radii_.center_};
 }
 
 }  // namespace collision_restraint
