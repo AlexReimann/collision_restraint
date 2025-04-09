@@ -4,7 +4,8 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    default_params = get_package_share_directory('collision_restraint') + '/config/test.yaml'
+    default_params = get_package_share_directory('collision_restraint') + '/config/default.yaml'
+    override_params = get_package_share_directory('collision_restraint') + '/config/test.yaml'
     
     return LaunchDescription([
         Node(
@@ -12,7 +13,7 @@ def generate_launch_description():
             namespace='collision_restraint',
             executable='collision_restraint_node',
             name='collision_restraint_node',
-            parameters=[default_params],
+            parameters=[default_params, override_params],
             remappings=[
                 ('output', '/cmd_vel'),
                 ('sub_point_cloud', '/cloud'),

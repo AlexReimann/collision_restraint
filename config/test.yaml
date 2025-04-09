@@ -1,8 +1,6 @@
 /**:
   ros__parameters:
     # Fixed parameters loaded on startup
-    base_link_frame: "base_link"
-
     footprint_length_front: 0.3
     footprint_length_back: 0.2
     footprint_width: 0.3
@@ -10,8 +8,4 @@
     # Dynamic parameters
     deceleration: 0.2
 
-    distance_buffer: 0.4
-    ignore_inside_footprint: false
-
-    min_obstacle_height: -1.0
-    max_obstacle_height: 1.0
+    distance_buffer: 0.1
