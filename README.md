@@ -3,8 +3,7 @@ ROS2 module to try to prohibit rectangular robots from driving into obstacles (P
 Example usage: Saver teleoperation.
 
 Work in Progress:  
-1. Snoozing
-2. Collision prevention for negative linear velocities (backwards driving)
+1. Collision prevention for negative linear velocities (backwards driving)
 
 Unsupported:
 1. Non-rectengular footprints
