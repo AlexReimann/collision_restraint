@@ -51,11 +51,10 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint")
     static_cast<float>(this->get_parameter("footprint_length_back").as_double());
   const float footprint_width =
     static_cast<float>(this->get_parameter("footprint_width").as_double());
+  const Footprint footprint(footprint_front, std::abs(footprint_back), footprint_width);
 
-  collision_restraint_ = std::make_shared<CollisionRestraint>(
-    Footprint(footprint_front, footprint_back, footprint_width), params_);
-  visualization_ = std::make_shared<Visualization>(
-    base_link_frame_, Footprint(footprint_front, footprint_back, footprint_width));
+  collision_restraint_ = std::make_shared<CollisionRestraint>(footprint, params_);
+  visualization_ = std::make_shared<Visualization>(base_link_frame_, footprint);
 
   pub_velocity_ = this->create_publisher<geometry_msgs::msg::Twist>("output", 1);
   pub_velocity_stamped_ =

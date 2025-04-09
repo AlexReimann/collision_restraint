@@ -4,7 +4,7 @@
     base_link_frame: "base_link"
 
     footprint_length_front: 1.0  # Distance of the robot front from base_link
-    footprint_length_back: 0.0  # Distance of the robot back from base_link. Needs to be >= 0.0
+    footprint_length_back: 0.0  # Distance of the robot back from base_link
     footprint_width: 1.0
 
     # Dynamic parameters
