@@ -18,7 +18,9 @@ namespace collision_restraint
 class CollisionRestraint
 {
 public:
-  CollisionRestraint(Footprint footprint, const std::shared_ptr<const Params> & params);
+  CollisionRestraint(
+    Footprint footprint, const std::shared_ptr<const Params> & params,
+    const float deceleration_linear, const float deceleration_angular);
 
   [[nodiscard]] std::tuple<bool, Velocities, PolarPoint, float, Radii> restrain(
     const Velocities & velocities, const sensor_msgs::msg::PointCloud2 & point_cloud);

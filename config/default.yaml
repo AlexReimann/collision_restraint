@@ -3,14 +3,16 @@
     # Fixed parameters loaded on startup
     base_link_frame: "base_link"
 
+    snooze_time: 20  # Duration of snooze when triggered via snooze topic
+    # How fast the robot can decelerate. Used to determine brake distance -> velocity scaling
+    deceleration_linear: 1.0
+    deceleration_angular: 1.0
+
     footprint_length_front: 1.0  # Distance of the robot front from base_link
     footprint_length_back: 0.0  # Distance of the robot back from base_link
     footprint_width: 1.0
 
     # Dynamic parameters
-    snooze_time: 20  # Duration of snooze when triggered via snooze topic
-    deceleration: 1.0  # How fast the robot can decelerate. Used to determine brake distance -> velocity scaling
-
     distance_buffer: 0.0  # Buffer distance to the obstacle. Aka. distance we stop in front of the obstacle __along the trajectory__.
     ignore_inside_footprint: false  # Ignore obstacle points inside the footprint
 

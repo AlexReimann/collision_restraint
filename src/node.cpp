@@ -32,7 +32,9 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint"), 
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
   this->declare_parameter("snooze_time", 20);
-  this->declare_parameter("deceleration", 1.0);
+
+  this->declare_parameter("deceleration_linear", 1.0);
+  this->declare_parameter("deceleration_angular", 1.0);
 
   this->declare_parameter("min_obstacle_height", -1.0);
   this->declare_parameter("max_obstacle_height", 1.0);
@@ -52,7 +54,13 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint"), 
     static_cast<float>(this->get_parameter("footprint_width").as_double());
   const Footprint footprint(footprint_front, std::abs(footprint_back), footprint_width);
 
-  collision_restraint_ = std::make_shared<CollisionRestraint>(footprint, params_);
+  const float decel_linear =
+    static_cast<float>(this->get_parameter("deceleration_linear").as_double());
+  const float decel_angular =
+    static_cast<float>(this->get_parameter("deceleration_angular").as_double());
+
+  collision_restraint_ =
+    std::make_shared<CollisionRestraint>(footprint, params_, decel_linear, decel_angular);
   visualization_ = std::make_shared<Visualization>(base_link_frame_, footprint);
 
   pub_velocity_ = this->create_publisher<geometry_msgs::msg::Twist>("output", 1);
@@ -91,10 +99,7 @@ void CollisionRestraintNode::parametersCallback(const std::vector<rclcpp::Parame
 {
   for (const auto & parameter : parameters) {
     // TODO(me): Fix ugly prone to failure if-else
-    if (parameter.get_name() == "deceleration") {
-      params_->deceleration_ = static_cast<float>(parameter.as_double());
-
-    } else if (parameter.get_name() == "min_obstacle_height") {
+    if (parameter.get_name() == "min_obstacle_height") {
       params_->min_obstacle_height_ = static_cast<float>(parameter.as_double());
     } else if (parameter.get_name() == "max_obstacle_height") {
       params_->max_obstacle_height_ = static_cast<float>(parameter.as_double());

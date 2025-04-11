@@ -1,11 +1,12 @@
 /**:
   ros__parameters:
     # Fixed parameters loaded on startup
+    deceleration_linear: 0.2
+    deceleration_angular: 0.5
+
     footprint_length_front: 0.3
     footprint_length_back: 0.2
     footprint_width: 0.3
 
     # Dynamic parameters
-    deceleration: 0.2
-
     distance_buffer: 0.1
