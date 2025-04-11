@@ -32,6 +32,11 @@ float PolarPoint::angularToEucDistance(const float angular_distance, const float
   return angular_distance * radius;
 }
 
+float PolarPoint::eucToAngularDistance(const float euc_distance, const float radius)
+{
+  return euc_distance / radius;
+}
+
 float PolarPoint::x() const { return point_.real(); }
 float PolarPoint::y() const { return point_.imag(); }
 
