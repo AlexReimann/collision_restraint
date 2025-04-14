@@ -15,14 +15,18 @@ public:
   [[nodiscard]] float max_r() const;
   [[nodiscard]] bool horizontal() const;
 
-  [[nodiscard]] float distance(const float theta, const float r, const bool use_min_theta) const;
+  [[nodiscard]] float distance(const float r, const float theta, const bool use_min_theta) const;
   [[nodiscard]] float r(const float theta) const;
   [[nodiscard]] float min_theta(const float r) const;
   [[nodiscard]] float max_theta(const float r) const;
   [[nodiscard]] std::tuple<float, float> thetas(const float r) const;
 
 private:
+  [[nodiscard]] bool on_line(const float r, const float theta) const;
+
   float m_;
+  float min_;
+  float max_;
   float min_r_;
   float max_r_;
   bool horizontal_;

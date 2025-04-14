@@ -8,6 +8,7 @@
 #include <limits>
 #include <stdexcept>
 
+#include "collision_restraint/polar_point.hpp"
 #include "collision_restraint/utility.hpp"
 
 namespace collision_restraint
@@ -20,6 +21,9 @@ PolarAxisLine::PolarAxisLine(const float m, const float a, const float b, const 
 : m_{m}, horizontal_{horizontal}, line_angle_{horizontal ? M_F_PI_2 : 0.0F}
 {
   if (std::isfinite(m_) && std::isfinite(a) && std::isfinite(b)) {
+    min_ = std::min(a, b);
+    max_ = std::max(a, b);
+
     const float a_abs = std::abs(a);
     const float b_abs = std::abs(b);
 
@@ -44,16 +48,18 @@ float PolarAxisLine::min_r() const { return min_r_; }
 float PolarAxisLine::max_r() const { return max_r_; }
 bool PolarAxisLine::horizontal() const { return horizontal_; }
 
-float PolarAxisLine::distance(const float theta, const float r, const bool use_min_theta) const
+float PolarAxisLine::distance(const float r, const float theta, const bool use_min_theta) const
 {
   if (r < min_r_ || r > max_r_) {
     return std::numeric_limits<float>::infinity();
   }
 
-  if (use_min_theta) {
-    return angles::normalize_angle_positive(theta - min_theta(r));
+  const float theta_selected = use_min_theta ? min_theta(r) : max_theta(r);
+  if (std::isfinite(theta_selected)) {
+    return angles::normalize_angle_positive(theta - theta_selected);
   }
-  return angles::normalize_angle_positive(theta - max_theta(r));
+
+  return theta_selected;
 }
 
 float PolarAxisLine::r(const float theta) const
@@ -93,13 +99,15 @@ float PolarAxisLine::r(const float theta) const
 float PolarAxisLine::min_theta(const float r) const
 {
   const auto [a, b] = thetas(r);
-  return std::min(a, b);
+  const float min = std::min(a, b);
+  return on_line(r, min) ? min : std::numeric_limits<float>::infinity();
 }
 
 float PolarAxisLine::max_theta(const float r) const
 {
   const auto [a, b] = thetas(r);
-  return std::max(a, b);
+  const float max = std::max(a, b);
+  return on_line(r, max) ? max : std::numeric_limits<float>::infinity();
 }
 
 std::tuple<float, float> PolarAxisLine::thetas(const float r) const
@@ -123,6 +131,13 @@ std::tuple<float, float> PolarAxisLine::thetas(const float r) const
   // mirrored around y-axis == +-M_PI_2
   const float offset = M_F_PI_2 - std::abs(theta);
   return {theta, (theta + std::copysign(2.0F * offset, theta))};
+}
+
+bool PolarAxisLine::on_line(const float r, const float theta) const
+{
+  const PolarPoint point = PolarPoint::polar(r, theta);
+  return (horizontal_ && point.y() >= min_ && point.y() <= max_) ||
+         (!horizontal_ && point.x() >= min_ && point.x() <= max_);
 }
 
 }  // namespace collision_restraint

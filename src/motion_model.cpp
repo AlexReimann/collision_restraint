@@ -32,9 +32,7 @@ Velocities MotionModel::scaleToStopDistance(
   const float target_angular = std::sqrt(2.0F * angular_distance * abs_angular_deceleration_);
 
   const float scaling =
-    std::isnan(angular_distance)
-      ? (target_linear / velocities.linear_)
-      : std::min(target_linear / velocities.linear_, target_angular / velocities.angular_);
+    std::abs(std::min(target_linear / velocities.linear_, target_angular / velocities.angular_));
 
   return {scaling * velocities.linear_, scaling * velocities.angular_};
 }

@@ -183,7 +183,7 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // 90 degree offsets
       CHECK(
-        model.angularDistance(turn_radius + half_width - eps, turn_radius + front_offset) ==
+        model.angularDistance(turn_radius + half_width - 0.01, turn_radius + front_offset) ==
         Catch::Approx(M_PI_2));
       CHECK(model.angularDistance(-front_offset, 2.0F * turn_radius) == Catch::Approx(M_PI));
       CHECK(
@@ -222,10 +222,10 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // directly next to it
       CHECK_THAT(
-        model.angularDistance(-back_offset + eps, -(half_width + eps)),
+        model.angularDistance(-(back_offset - 0.001), -(half_width + eps)),
         Catch::Matchers::WithinAbs(eps, 10.0F * eps));
       CHECK(std::isnormal(model.angularDistance(0.0F, -(half_width + eps))));
-      CHECK(std::isnormal(model.angularDistance(back_offset - eps, -(half_width + eps))));
+      CHECK(std::isnormal(model.angularDistance(back_offset - 0.001, -(half_width + eps))));
     }
 
     SECTION("big_radius")
@@ -302,7 +302,7 @@ TEST_CASE("distance_angular_forwards", "[distance_model]")
     {
       // directly next to it
       CHECK_THAT(
-        model.angularDistance(-back_offset + eps, half_width + eps),
+        model.angularDistance(-back_offset + 0.001, half_width + eps),
         Catch::Matchers::WithinAbs(eps, 10.0F * eps));
       CHECK(std::isnormal(model.angularDistance(0.0F, half_width + eps)));
       CHECK(std::isnormal(model.angularDistance(back_offset - eps, half_width + eps)));
@@ -350,6 +350,9 @@ TEST_CASE("distance_angular_spot_turn", "[distance_model]")
       CHECK(model.angularDistance(-back_offset + 3.0F * eps, -(half_width + eps)) <= 0.001F);
       CHECK(model.angularDistance(front_offset - eps, half_width + eps) > 0.0F);
       CHECK(model.angularDistance(front_offset - eps, half_width + eps) <= 0.001F);
+
+      // at back, but back misses
+      CHECK(model.angularDistance(-(front_offset - eps), -(half_width + eps)) > 2.0F);
     }
 
     SECTION("right_turn")
@@ -366,6 +369,9 @@ TEST_CASE("distance_angular_spot_turn", "[distance_model]")
       CHECK(model.angularDistance(-back_offset + 3.0F * eps, half_width + eps) <= 0.001F);
       CHECK(model.angularDistance(front_offset - eps, -half_width - eps) > 0.0F);
       CHECK(model.angularDistance(front_offset - eps, -half_width - eps) <= 0.001F);
+
+      // at back, but back misses
+      CHECK(model.angularDistance(-(front_offset - eps), half_width + eps) > 2.0F);
     }
   }
 }

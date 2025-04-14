@@ -55,11 +55,11 @@ std::tuple<bool, Velocities, PolarPoint, float, Radii> CollisionRestraint::restr
   const float min_distance = distance - params_->distance_buffer_;
   const float min_angular_distance =
     distance_.isStraight()
-      ? std::numeric_limits<float>::quiet_NaN()
+      ? std::numeric_limits<float>::infinity()
       : PolarPoint::eucToAngularDistance(min_distance, closest_point_rot_center.r());
   const float angular_stop_distance = motion_.angularStoppingDistance(velocities.angular_);
 
-  if (min_distance > stop_distance || min_angular_distance > angular_stop_distance) {
+  if (min_distance > stop_distance && min_angular_distance > angular_stop_distance) {
     return {false, velocities, closest_point_base_link, stop_distance, distance_.radii()};
   }
 

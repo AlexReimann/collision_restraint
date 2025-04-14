@@ -44,8 +44,8 @@ void DistanceModel::setVelocities(const float linear, const float angular)
   radii_.outer_ =
     std::sqrt((max_offset * max_offset) + (radius_perpendicular * radius_perpendicular));
 
-  const float left_offset = radii_.center_ - footprint_.halfWidth();
-  const float right_offset = radii_.center_ + footprint_.halfWidth();
+  const float left_offset =  footprint_.halfWidth() - radii_.center_;
+  const float right_offset = -footprint_.halfWidth() - radii_.center_;
   front_ = PolarAxisLine(footprint_.offsetFront(), left_offset, right_offset, true);
   back_ = PolarAxisLine(footprint_.offsetBack(), left_offset, right_offset, true);
 
@@ -126,22 +126,23 @@ float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
     return std::numeric_limits<float>::infinity();
   }
 
-  const float front_distance = front_->distance(point.theta(), point.r(), true);
+  const float front_distance = front_->distance(point.r(), point.theta(), true);
 
   // Don't need to check back for radii_.inner_ > 0.0F
   const float back_distance = radii_.inner_ == 0.0F
-                                ? back_->distance(point.theta(), point.r(), false)
+                                ? back_->distance(point.r(), point.theta(), false)
                                 : std::numeric_limits<float>::infinity();
 
   // theta flips when crossing the x-axis
-  const float left_distance = left_->distance(point.theta(), point.r(), left_->m() >= 0.0F);
+  const float left_distance = left_->distance(point.r(), point.theta(), left_->m() >= 0.0F);
 
   // The right side will only hit in case of the point being directly next to the robot.
   // (In any other case the point will be hit first by the front or left side)
   // In this case the right side is swinging out, meaning only the part farther back can hit.
   // Thus we check the distance with the lower (== min) theta
-  const float right_distance = right_->distance(point.theta(), point.r(), true);
+  const float right_distance = right_->distance(point.r(), point.theta(), true);
 
+  // return right_distance;
   return std::min({front_distance, left_distance, right_distance, back_distance});
 }
 
