@@ -44,7 +44,7 @@ void DistanceModel::setVelocities(const float linear, const float angular)
   radii_.outer_ =
     std::sqrt((max_offset * max_offset) + (radius_perpendicular * radius_perpendicular));
 
-  const float left_offset =  footprint_.halfWidth() - radii_.center_;
+  const float left_offset = footprint_.halfWidth() - radii_.center_;
   const float right_offset = -footprint_.halfWidth() - radii_.center_;
   front_ = PolarAxisLine(footprint_.offsetFront(), left_offset, right_offset, true);
   back_ = PolarAxisLine(footprint_.offsetBack(), left_offset, right_offset, true);
