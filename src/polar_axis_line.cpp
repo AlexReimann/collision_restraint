@@ -50,16 +50,32 @@ bool PolarAxisLine::horizontal() const { return horizontal_; }
 
 float PolarAxisLine::distance(const float r, const float theta, const bool use_min_theta) const
 {
-  if (r < min_r_ || r > max_r_) {
-    return std::numeric_limits<float>::infinity();
-  }
-
-  const float theta_selected = use_min_theta ? min_theta(r) : max_theta(r);
+  const float theta_selected = selectTheta(r, use_min_theta);
   if (std::isfinite(theta_selected)) {
     return angles::normalize_angle_positive(theta - theta_selected);
   }
 
   return theta_selected;
+}
+
+float PolarAxisLine::distanceBackwards(
+  const float r, const float theta, const bool use_min_theta) const
+{
+  const float theta_selected = selectTheta(r, use_min_theta);
+  if (std::isfinite(theta_selected)) {
+    return angles::normalize_angle_positive(theta_selected - theta);
+  }
+
+  return theta_selected;
+}
+
+float PolarAxisLine::selectTheta(const float r, const bool use_min_theta) const
+{
+  if (r < min_r_ || r > max_r_) {
+    return std::numeric_limits<float>::infinity();
+  }
+
+  return use_min_theta ? min_theta(r) : max_theta(r);
 }
 
 float PolarAxisLine::r(const float theta) const

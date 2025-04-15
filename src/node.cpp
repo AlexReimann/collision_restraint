@@ -166,8 +166,7 @@ void CollisionRestraintNode::twistStampedCallback(
   const float input_linear = static_cast<float>(twist_msg->twist.linear.x);
   const float input_angular = static_cast<float>(twist_msg->twist.angular.z);
 
-  if (input_linear < 0.0F || !enable_ || this->now() < snooze_stop_time_) {
-    // checks backwards currently not supported
+  if (!enable_ || this->now() < snooze_stop_time_) {
     pub_velocity_stamped_->publish(output);
     pub_velocity_->publish(output.twist);
     return;

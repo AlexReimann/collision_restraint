@@ -126,6 +126,14 @@ float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
     return std::numeric_limits<float>::infinity();
   }
 
+  if (velocity_linear_ < 0.0F) {
+    return angularDistanceBackwards(point);
+  }
+  return angularDistanceForwards(point);
+}
+
+float DistanceModel::angularDistanceForwards(const PolarPoint & point) const
+{
   const float front_distance = front_->distance(point.r(), point.theta(), true);
 
   // Don't need to check back for radii_.inner_ > 0.0F
@@ -141,6 +149,28 @@ float DistanceModel::angularDistance(const PolarPoint & point_base_link) const
   // In this case the right side is swinging out, meaning only the part farther back can hit.
   // Thus we check the distance with the lower (== min) theta
   const float right_distance = right_->distance(point.r(), point.theta(), true);
+
+  // return right_distance;
+  return std::min({front_distance, left_distance, right_distance, back_distance});
+}
+
+float DistanceModel::angularDistanceBackwards(const PolarPoint & point) const
+{
+  const float back_distance = back_->distanceBackwards(point.r(), point.theta(), true);
+
+  // Don't need to check back for radii_.inner_ > 0.0F
+  const float front_distance = radii_.inner_ == 0.0F
+                                 ? front_->distanceBackwards(point.r(), point.theta(), false)
+                                 : std::numeric_limits<float>::infinity();
+
+  // theta flips when crossing the x-axis
+  const float left_distance = left_->distance(point.r(), point.theta(), left_->m() <= 0.0F);
+
+  // The right side will only hit in case of the point being directly next to the robot.
+  // (In any other case the point will be hit first by the front or left side)
+  // In this case the right side is swinging out, meaning only the part farther back can hit.
+  // Thus we check the distance with the lower (== min) theta
+  const float right_distance = right_->distance(point.r(), point.theta(), false);
 
   // return right_distance;
   return std::min({front_distance, left_distance, right_distance, back_distance});

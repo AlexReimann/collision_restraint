@@ -31,6 +31,8 @@ private:
   [[nodiscard]] bool insideFootprint(const float x, const float y) const;
   [[nodiscard]] float straightDistance(const float x, const float y) const;
   [[nodiscard]] float angularDistance(const PolarPoint & point_base_link) const;
+  [[nodiscard]] float angularDistanceForwards(const PolarPoint & point) const;
+  [[nodiscard]] float angularDistanceBackwards(const PolarPoint & point) const;
 
   std::shared_ptr<const Params> params_;
   Footprint footprint_;
