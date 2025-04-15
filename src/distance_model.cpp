@@ -73,7 +73,7 @@ float DistanceModel::angularDistance(const float x, const float y) const
     return std::numeric_limits<float>::infinity();
   }
 
-  if (straight_) {
+  if (velocity_linear_ != 0.0F && straight_) {
     return straightDistance(point.x(), point.y());
   }
 
