@@ -25,12 +25,14 @@ Unsupported:
 * Output command velocities on `/collision_restraint/output` / `/collision_restraint/output_stamped`
 * Adjust footprint, deceleration and other parameters in the `config/default.yaml`
 * Visualization available on `/collision_restraint/visual/*`
+* Use `ros2 topic pub collision_restraint/snooze std_msgs/msg/Empty "{}"` to snooze (default: 20 secs)
+* Use `ros2 topic pub collision_restraint/enable std_msgs/msg/Bool "{data: false}"` to disable
 
 ### Nav2 test / demo setup
 For testing with the nav2 turtlebot simulation (`ros2 launch nav2_bringup tb3_simulation_launch.py`), simply launch:
 
 ```
-ros2 launch collision_restraint test_launch.py
+ros2 launch collision_restraint nav2_tb3_simulation_test_launch.py
 ```
 (needs the `pointcloud_to_laserscan` package)
 
