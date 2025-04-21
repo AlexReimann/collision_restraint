@@ -2,11 +2,15 @@
 ROS2 module to try to prohibit rectangular robots from driving into obstacles (PointCloud2 points) by restraining 2D twist command velocities.  
 Example usage: Saver teleoperation.
 
-Work in Progress:  
-1. Collision prevention for negative linear velocities (backwards driving)
+WIP:
+1. Additional footprint buffer which restraints movement, but does not fully block
+2. Better turning radius circle visualization
+
+Known issues:
+1. If obstacle points jump, robot can get stuck and snoozing has to be used
 
 Unsupported:
-1. Non-rectengular footprints
+1. Non-rectangular footprints
 2. Motion models different from linear + angular velocity
 3. Respecting / enforcing actual dynamics of robot (e.g. acceleration limits for velocity adjustments)
 4. Feedback based slowing down / velocity limiting (this package ignores the actual velocity of robot (odom), feed forward only)
