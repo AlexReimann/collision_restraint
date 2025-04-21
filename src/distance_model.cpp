@@ -27,6 +27,9 @@ void DistanceModel::setVelocities(const float linear, const float angular)
 
   straight_ = std::abs(velocity_angular_) <= g_straight_threshold;
   left_turn_ = velocity_angular_ >= 0.0F;
+  if (velocity_linear_ < 0.0F) {
+    left_turn_ = !left_turn_;
+  }
 
   if (straight_) {
     radii_.inner_ = std::numeric_limits<float>::infinity();
