@@ -179,3 +179,74 @@ TEST_CASE("thetas", "[polar_axis_line]")
     CHECK(std::get<1>(ver_neg.thetas(std::sqrt(2.0F))) == Catch::Approx(-(M_PI_2 + M_PI_4)));
   }
 }
+
+TEST_CASE("distanceBackwards", "[polar_axis_line]")
+{
+  // ros coordinates -> x: forward, y: left
+
+  SECTION("x_axis")
+  {
+    PolarAxisLine x_axis{-1.0F, 1.0F, -0.5F, false};
+    // radius too small
+    CHECK(x_axis.distanceBackwards(0.5F, 1.0F, true) == std::numeric_limits<float>::infinity());
+    CHECK(x_axis.distanceBackwards(0.9F, -1.0F, false) == std::numeric_limits<float>::infinity());
+
+    // radius missing line
+    CHECK(
+      x_axis.distanceBackwards(std::sqrt(2.0F) + 0.01, 1.0F, false) ==
+      std::numeric_limits<float>::infinity());
+    CHECK(
+      x_axis.distanceBackwards(std::sqrt(2.0F) + 0.01, -1.0F, true) ==
+      std::numeric_limits<float>::infinity());
+
+    // on line
+    CHECK(x_axis.distanceBackwards(1.0F, -M_PI_2, true) == 0.0F);
+    CHECK(x_axis.distanceBackwards(1.0F, -M_PI_2, false) == 0.0F);
+
+    // quarters
+    CHECK(x_axis.distanceBackwards(1.0F, 0.0F, true) == Catch::Approx(3 * M_PI_2));
+    CHECK(x_axis.distanceBackwards(1.0F, 0.0F, false) == Catch::Approx(3 * M_PI_2));
+    CHECK(x_axis.distanceBackwards(1.0F, M_PI_2, true) == Catch::Approx(M_PI));
+    CHECK(x_axis.distanceBackwards(1.0F, M_PI_2, false) == Catch::Approx(M_PI));
+    CHECK(x_axis.distanceBackwards(1.0F, M_PI, true) == Catch::Approx(M_PI_2));
+    CHECK(x_axis.distanceBackwards(1.0F, M_PI, false) == Catch::Approx(M_PI_2));
+
+    // multiple intersections
+    CHECK(x_axis.distanceBackwards(std::sqrt(2.0F), -M_PI_2, false) == Catch::Approx(M_PI_4));
+    CHECK(
+      x_axis.distanceBackwards(std::sqrt(2.0F), 0.0F, false) == Catch::Approx(3 * M_PI_2 + M_PI_4));
+  }
+
+  SECTION("y_axis")
+  {
+    PolarAxisLine y_axis{1.0F, 1.0F, -0.5F, true};
+    // radius too small
+    CHECK(y_axis.distanceBackwards(0.5F, 1.0F, true) == std::numeric_limits<float>::infinity());
+    CHECK(y_axis.distanceBackwards(0.9F, -1.0F, false) == std::numeric_limits<float>::infinity());
+
+    // radius missing line
+    CHECK(
+      y_axis.distanceBackwards(std::sqrt(2.0F) + 0.01, 1.0F, false) ==
+      std::numeric_limits<float>::infinity());
+    CHECK(
+      y_axis.distanceBackwards(std::sqrt(2.0F) + 0.01, -1.0F, true) ==
+      std::numeric_limits<float>::infinity());
+
+    // on line
+    CHECK(y_axis.distanceBackwards(1.0F, 0.0F, true) == 0.0F);
+    CHECK(y_axis.distanceBackwards(1.0F, 0.0F, false) == 0.0F);
+
+    // quarters
+    CHECK(y_axis.distanceBackwards(1.0F, M_PI_2, true) == Catch::Approx(3 * M_PI_2));
+    CHECK(y_axis.distanceBackwards(1.0F, M_PI_2, false) == Catch::Approx(3 * M_PI_2));
+    CHECK(y_axis.distanceBackwards(1.0F, -M_PI_2, true) == Catch::Approx(M_PI_2));
+    CHECK(y_axis.distanceBackwards(1.0F, -M_PI_2, false) == Catch::Approx(M_PI_2));
+    CHECK(y_axis.distanceBackwards(1.0F, M_PI, true) == Catch::Approx(M_PI));
+    CHECK(y_axis.distanceBackwards(1.0F, M_PI, false) == Catch::Approx(M_PI));
+
+    // multiple intersections
+    CHECK(
+      y_axis.distanceBackwards(std::sqrt(2.0F), -M_PI_2, false) == Catch::Approx(M_PI_2 + M_PI_4));
+    CHECK(y_axis.distanceBackwards(std::sqrt(2.0F), 0.0F, false) == Catch::Approx(M_PI_4));
+  }
+}
