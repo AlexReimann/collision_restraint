@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     default_params = get_package_share_directory('collision_restraint') + '/config/default.yaml'
-    override_params = get_package_share_directory('collision_restraint') + '/config/test.yaml'
+    override_params = get_package_share_directory('collision_restraint') + '/config/nav2_tb3_simulation_test.yaml'
     
     return LaunchDescription([
         Node(
