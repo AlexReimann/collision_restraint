@@ -200,7 +200,8 @@ void CollisionRestraintNode::twistStampedCallback(
   pub_velocity_stamped_->publish(output);
   pub_velocity_->publish(output.twist);
 
-  pub_trajectory_visual_->publish(visualization_->trajectoryMarker(input_angular, distance, radii));
+  pub_trajectory_visual_->publish(
+    visualization_->trajectoryMarker(input_linear, input_angular, distance, radii));
 
   if (std::isfinite(distance)) {
     std_msgs::msg::Float32 distance_msg;

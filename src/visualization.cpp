@@ -24,12 +24,14 @@ Visualization::Visualization(const std::string & frame, Footprint footprint)
 }
 
 visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
-  const float angular_velocity, const float stopping_distance, const Radii & radii) const
+  const float linear_velocity, const float angular_velocity, const float stopping_distance,
+  const Radii & radii) const
 {
   visualization_msgs::msg::MarkerArray array;
 
+  const bool forwards = linear_velocity >= 0.0F;
   if (std::abs(angular_velocity) <= g_straight_threshold) {
-    array.markers.push_back(straightLineMarker(stopping_distance));
+    array.markers.push_back(straightLineMarker(forwards ? stopping_distance : -stopping_distance));
     return array;
   }
 
@@ -37,7 +39,7 @@ visualization_msgs::msg::MarkerArray Visualization::trajectoryMarker(
     return array;
   }
 
-  const bool left = angular_velocity >= 0.0 ? true : false;
+  const bool left = (angular_velocity >= 0.0F) == forwards ? true : false;
 
   visualization_msgs::msg::Marker outer =
     circleMarker(radii.outer_, -(radii.outer_ - radii.center_), left);
