@@ -1,5 +1,7 @@
 /**:
   ros__parameters:
+    use_sim_time: true
+
     # Fixed parameters loaded on startup
     deceleration_linear: 0.2
     deceleration_angular: 0.5
@@ -9,4 +11,4 @@
     footprint_width: 0.3
 
     # Dynamic parameters
-    distance_buffer: 0.1
+    distance_buffer: 0.2
