@@ -2,9 +2,9 @@
 ROS2 module to try to prohibit rectangular robots from driving into obstacles (PointCloud2 points) by restraining 2D twist command velocities.  
 Example usage: Saver teleoperation.
 
-WIP:
+Maybe future work:
 1. Additional footprint buffer which restraints movement, but does not fully block
-2. Better turning radius circle visualization
+2. Better (actually round) turning radius circle visualization
 
 Known issues:
 1. If obstacle points jump, robot can get stuck and snoozing has to be used
