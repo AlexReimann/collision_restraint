@@ -3,6 +3,7 @@
     # Fixed parameters loaded on startup
     base_link_frame: "base_link"
 
+    max_xy_distance: 3.0  # Ignore points which are farther than this in x/y from base_link_frame
     snooze_time: 20  # Duration of snooze when triggered via snooze topic
     # How fast the robot can decelerate. Used to determine brake distance -> velocity scaling
     deceleration_linear: 1.0

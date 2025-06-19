@@ -31,6 +31,7 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint"), 
   tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
+  this->declare_parameter("max_xy_distance", 3.0);
   this->declare_parameter("snooze_time", 20);
 
   this->declare_parameter("deceleration_linear", 1.0);
@@ -59,8 +60,9 @@ CollisionRestraintNode::CollisionRestraintNode() : Node("collision_restraint"), 
   const float decel_angular =
     static_cast<float>(this->get_parameter("deceleration_angular").as_double());
 
-  collision_restraint_ =
-    std::make_shared<CollisionRestraint>(footprint, params_, decel_linear, decel_angular);
+  collision_restraint_ = std::make_shared<CollisionRestraint>(
+    footprint, params_, static_cast<float>(this->get_parameter("max_xy_distance").as_double()),
+    decel_linear, decel_angular);
   visualization_ = std::make_shared<Visualization>(base_link_frame_, footprint);
 
   pub_velocity_ = this->create_publisher<geometry_msgs::msg::Twist>("output", 1);

@@ -19,7 +19,7 @@ class CollisionRestraint
 {
 public:
   CollisionRestraint(
-    Footprint footprint, const std::shared_ptr<const Params> & params,
+    Footprint footprint, const std::shared_ptr<const Params> & params, const float max_xy_distance,
     const float deceleration_linear, const float deceleration_angular);
 
   [[nodiscard]] std::tuple<bool, Velocities, PolarPoint, float, Radii> restrain(
@@ -27,6 +27,7 @@ public:
 
 private:
   std::shared_ptr<const Params> params_;
+  float max_xy_distance_;
 
   DistanceModel distance_;
   MotionModel motion_;
